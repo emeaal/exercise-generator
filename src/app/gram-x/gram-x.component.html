@@ -1,0 +1,173 @@
+<mat-toolbar color="primary">
+    <div style="display:flex; align-items:center; height:100%;">
+      <span><a routerLink="/home">SwedishFromScratch</a></span>
+      <a mat-button routerLink="/home" routerLinkActive="active-link" style="min-height:100%;">Home</a>
+      <a mat-button routerLink="/xgen" routerLinkActive="active-link" style="min-height:100%;">Create lesson
+          <span class="arrow-down"></span>
+      </a>
+      <a mat-button routerLink="/tablegen" routerLinkActive="active-link" style="min-height:100%;">Generate tables</a>
+      <a mat-button routerLink="/gram-x" routerLinkActive="active-link" style="min-height:100%;">Grammar</a>
+      <a mat-button routerLink="/url-create" routerLinkActive="active-link" style="min-height:100%;">URL</a>
+    </div>
+  
+
+    <div style="float:right">
+        <button mat-button [matMenuTriggerFor]="menu">{{ls.localize('language-selection-menu')}}</button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item
+                (click)="changeLanguage('english')">{{ls.localize('language-selection-english')}}</button>
+            <button mat-menu-item
+                (click)="changeLanguage('swedish')">{{ls.localize('language-selection-swedish')}}</button>
+            <button mat-menu-item
+                (click)="changeLanguage('russian')">{{ls.localize('language-selection-russian')}}</button>
+            <!--<button mat-menu-item disabled="true">{{ls.localize('language-selection-ukrainian')}}</button>-->
+        </mat-menu>
+        <i class="material-icons">language</i>
+    </div>
+
+</mat-toolbar>
+
+<div class="submenu" *ngIf="isGramXRoute">
+    <div class="spacer2"></div>
+    <a mat-button (click)="currentPageNumber = 0" [class.active-link]="currentPageNumber === 0">Start</a>
+    <a mat-button (click)="currentPageNumber = 1" [class.active-link]="currentPageNumber === 1">Review</a>
+    <a mat-button (click)="currentPageNumber = 2" [class.active-link]="currentPageNumber === 2">Exercise options</a>
+    <a mat-button (click)="currentPageNumber = 3" [class.active-link]="currentPageNumber === 3">View lesson</a>
+    <a mat-button (click)="currentPageNumber = 4" [class.active-link]="currentPageNumber === 4">Check text</a>
+    <!-- <a mat-button (click)="currentPageNumber = 4" [class.active-link]="currentPageNumber === 4">View lesson</a>-->
+</div>
+
+<app-waiter></app-waiter>
+
+
+<div class="margin-container">
+    <div *ngIf="currentPageNumber==0">
+        <div class="prepared-lesson-container">
+            {{ ls.localize('menu-select-lesson') }}
+            <br /><br />
+            <mat-form-field>
+                <mat-select [(value)]="manualLesson">
+                    <mat-option *ngFor="let lesson of validLessons" [value]="lesson.lessonNumber">
+                        {{ lesson.lessonNumber }} - {{ lesson.title }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br /><br />
+            <button mat-button mat-raised-button color="primary" (click)="reviewManualExercise()">
+                Review
+            </button>
+        </div>
+        <div style="float:left">
+            Write your own text
+            <br><br>
+            <mat-form-field style="width: 30%;">
+                <input matInput type="number" [(ngModel)]="lessonNumber" placeholder="Lesson number" #ln
+                    autocomplete="off">
+            </mat-form-field>
+            &nbsp;&nbsp;&nbsp;
+            <mat-form-field style="width: 50%;">
+                <input matInput type="text" [(ngModel)]="lessonTitle" placeholder="Title" #title autocomplete="off">
+            </mat-form-field>
+            <br />
+            <mat-form-field style="width: 90%;">
+                <textarea matInput [(ngModel)]="textareaValue" #newtext placeholder="Enter text here"
+                    cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5"
+                    cdkAutosizeMaxRows="50">{{ textareaValue }}</textarea>
+            </mat-form-field>
+            <br /><br />
+            <button mat-button mat-raised-button color="warn" (click)="clearForm()"
+                [disabled]="!(lessonNumber && lessonTitle && textareaValue)">Clear</button>
+            &nbsp;&nbsp;&nbsp;
+            <button mat-button mat-raised-button color="primary"
+                (click)="make_grammar_ex(ln.value, title.value, newtext.value)">Process!</button>
+        </div>
+    </div>
+
+    <div *ngIf="currentPageNumber==1">
+        <br />
+        <table>
+            <tr>
+                <th>Word</th>
+                <th>Lemma</th>
+                <th>POS</th>
+                <th>MSD</th>
+                <th>Choose for exercise</th>
+                <!-- <th>Multiple choice distractors (3)<mat-icon inline="true"
+                        matTooltip="Enter a comma-separated list of 3 distractors for multiple-choice questions.">help</mat-icon>
+                </th>
+            <th>Exclude from exercise <mat-icon inline="true"
+                    matTooltip="Exclude this word from the automatic exercise generation.">help</mat-icon></th>
+            <th>Delete</th>
+            <th></th>
+        </tr>-->
+            <tr *ngFor="let obj of posData; let i = index" class="uip">
+                <td><mat-form-field><input matInput type="text" [value]="obj['text']" #text
+                            (blur)="posData[i]['text'] = text.value"></mat-form-field></td>
+                <td><mat-form-field><input matInput type="text" [value]="obj['lemma']" #lemma
+                            (blur)="posData[i]['lemma'] = lemma.value"></mat-form-field></td>
+                <td><mat-form-field><input matInput type="text" [value]="obj['pos']" #pos
+                            (blur)="posData[i]['pos'] = pos.value"></mat-form-field></td>
+                <td><mat-form-field><input matInput type="text" [value]="obj['msd']" #msd
+                            (blur)="posData[i]['msd'] = pos.value"></mat-form-field></td>
+                <td><mat-checkbox [(ngModel)]="isChosen[obj.lemma]"></mat-checkbox></td>
+            </tr>
+        </table>
+
+        <br /><br />
+        <button mat-button mat-raised-button color="primary" (click)="back()">
+            Back
+        </button>
+        &nbsp;&nbsp;&nbsp;
+        <button mat-button mat-raised-button color="primary" (click)="next()">
+            Next
+        </button>
+        &nbsp;&nbsp;&nbsp;
+
+    </div>
+
+    <div *ngIf="currentPageNumber==2">
+        <ng-container *ngFor="let word of posData; let i = index">
+            <ng-container *ngIf="isChosen[word.lemma]">
+                <input type="text" placeholder="{{word.lemma}}">
+            </ng-container>
+            <ng-container *ngIf="!isChosen[word.lemma]">
+                {{word.text}}
+            </ng-container>
+        </ng-container>
+        </div>
+
+
+
+        <div *ngIf="currentPageNumber==4">
+            <div>
+                Write your text
+                <br><br>
+                <mat-form-field style="width: 30%;">
+                    <input matInput type="number" [(ngModel)]="lessonNumber" placeholder="Lesson number" #ln
+                        autocomplete="off">
+                </mat-form-field>
+                &nbsp;&nbsp;&nbsp;
+                <mat-form-field style="width: 50%;">
+                    <input matInput type="text" [(ngModel)]="lessonTitle" placeholder="Title" #title autocomplete="off">
+                </mat-form-field>
+                <br />
+                <mat-form-field style="width: 90%;">
+                    <textarea matInput [(ngModel)]="textareaValue" #newtext placeholder="Enter text here"
+                        cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5"
+                        cdkAutosizeMaxRows="50">{{ textareaValue }}</textarea>
+                </mat-form-field>
+                <br /><br />
+                <button mat-button mat-raised-button color="warn" (click)="clearForm()"
+                    [disabled]="!(lessonNumber && lessonTitle && textareaValue)">Clear</button>
+                &nbsp;&nbsp;&nbsp;
+                <button mat-button mat-raised-button color="primary"
+                    (click)="check_grammar(ln.value, title.value, newtext.value)">Process!</button>
+            </div>
+            
+            <ng-container *ngFor="let word of posData; let i = index">
+                {{word.text}}
+            </ng-container>
+        </div>
+
+
+</div>

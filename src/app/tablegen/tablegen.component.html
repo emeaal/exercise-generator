@@ -1,0 +1,223 @@
+<mat-toolbar color="primary">
+  <div style="display:flex; align-items:center; height:100%;">
+    <span><a routerLink="/home">SwedishFromScratch</a></span>
+    <a mat-button routerLink="/home" routerLinkActive="active-link" style="min-height:100%;">Home</a>
+    <a mat-button routerLink="/xgen" routerLinkActive="active-link" style="min-height:100%;">Create lesson
+      <span class="arrow-down"></span>
+    </a>
+    <a mat-button routerLink="/tablegen" routerLinkActive="active-link" style="min-height:100%;">Generate tables</a>
+    <a mat-button routerLink="/gram-x" routerLinkActive="active-link" style="min-height:100%;">Grammar</a>
+    <a mat-button routerLink="/url-create" routerLinkActive="active-link" style="min-height:100%;">URL</a>
+  </div>
+
+  <div style="float:right">
+    <button mat-button [matMenuTriggerFor]="menu">{{ls.localize('language-selection-menu')}}</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="changeLanguage('english')">{{ls.localize('language-selection-english')}}</button>
+      <button mat-menu-item (click)="changeLanguage('swedish')">{{ls.localize('language-selection-swedish')}}</button>
+      <button mat-menu-item (click)="changeLanguage('russian')">{{ls.localize('language-selection-russian')}}</button>
+      <!--<button mat-menu-item disabled="true">{{ls.localize('language-selection-ukrainian')}}</button>-->
+    </mat-menu>
+    <i class="material-icons">language</i>
+  </div>
+
+</mat-toolbar>
+
+<div class="submenu" *ngIf="isTablegenRoute">
+  <div class="spacer2"></div>
+  <a mat-button (click)="currentPageNumber = 0" [class.active-link]="currentPageNumber === 0">Start</a>
+  <a mat-button (click)="currentPageNumber = 1" [class.active-link]="currentPageNumber === 1">Review</a>
+  <a mat-button (click)="currentPageNumber = 2" [class.active-link]="currentPageNumber === 2">Exercise options</a>
+  <a mat-button (click)="currentPageNumber = 3" [class.active-link]="currentPageNumber === 3">View lesson</a>
+  <!-- <a mat-button (click)="currentPageNumber = 3" [class.active-link]="currentPageNumber === 3">View lesson</a>-->
+</div>
+
+<app-waiter></app-waiter>
+
+
+<div class="table-container">
+  <!--<div *ngIf="currentPageNumber==0">
+
+    <table>
+      <th>
+      <td><mat-form-field><input matInput type="text" [(ngModel)]="word"></mat-form-field></td>
+    </table>
+    <button mat-button mat-raised-button color="primary" (click)="create_table()">Create table</button>
+
+
+    <table *ngIf="msdWords" class="table">
+      <tbody>
+        <tr>
+          <td></td>
+          <ng-container *ngFor="let entry of msdWords | keyvalue">
+            <td>{{ entry.key }}</td>
+          </ng-container>
+        </tr>
+        <tr>
+          <td>Forms</td>
+          <ng-container *ngFor="let entry of msdWords | keyvalue">
+            <td>
+              <mat-form-field class="table-field">
+                <input matInput type="text" [(ngModel)]="entry.value" [ngModelOptions]="{standalone: true}"
+                  class="input-field">
+              </mat-form-field>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>-->
+
+  <div *ngIf="currentPageNumber==0">
+
+    <h2>Create inflection table exercise</h2>
+    <h3>Type in your words </h3>
+    <br>
+    <br>
+    <mat-form-field>
+      <input matInput type="text" [(ngModel)]="inputValues[0]" matAutocomplete="off">
+    </mat-form-field>
+    <button mat-icon-button (click)="deleteInputField(0)">
+      <mat-icon>delete</mat-icon>
+    </button>
+
+    <div *ngFor="let input of inputValues.slice(1); let i = index">
+      <mat-form-field>
+        <input matInput type="text" [value]="input" (ngModelChange)="onInputChange($event, i + 1)">
+      </mat-form-field>
+      <button mat-icon-button (click)="deleteInputField(i + 1)">
+        <mat-icon>delete</mat-icon>
+      </button>
+
+
+    </div>
+
+
+    <br>
+    <button mat-icon-button (click)="addInputField()">
+      <mat-icon>add_circle_outline</mat-icon></button>
+    <br> <br>
+    <button mat-button mat-raised-button color="warn" (click)="clearAll()">Clear all</button>
+    &nbsp;&nbsp;&nbsp;
+    <button mat-button mat-raised-button color="primary" (click)="create_big_table()">Create table</button>
+
+
+  </div>
+  <div *ngIf="currentPageNumber==1">
+
+    <div *ngFor="let table of tableData">
+      <h3>{{ table.wordClass }} table</h3>
+      <table>
+        <thead>
+          <tr>
+            <ng-container *ngFor="let header of table.headers">
+              <th>{{ header }}</th>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of table.rows; let i = index">
+            <ng-container *ngFor="let value of row.values; let j = index">
+              <td>
+                <mat-form-field class="table-field">
+                  <input matInput type="text" [(ngModel)]="table.rows[i].values[j]"
+                    [ngModelOptions]="{updateOn: 'blur'}">
+                </mat-form-field>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <button mat-button mat-raised-button color="primary" (click)="back()">
+      Back
+    </button>
+    &nbsp;&nbsp;&nbsp;
+    <button mat-button mat-raised-button color="primary" (click)="next()">
+      Next
+    </button>
+
+  </div>
+  <div *ngIf="currentPageNumber==2">
+
+    <div *ngFor="let choice of exerciseChoices">
+      <mat-checkbox [(ngModel)]="isChecked[choice]" [value]="choice">{{choice}}</mat-checkbox>
+      <br />
+    </div>
+    
+    <div *ngIf="isChecked['Choose manually']">
+      <div *ngFor="let table of tableData">
+        <h3>{{ table.wordClass }} table</h3>
+        <table>
+          <thead>
+            <tr>
+              <ng-container *ngFor="let header of table.headers">
+                <th>{{ header }}</th>
+              </ng-container>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of table.rows; let i = index">
+              <ng-container *ngFor="let value of row.values; let j = index">
+                <td>
+                  <mat-form-field class="table-field">
+                    <input matInput type="text" [(ngModel)]="table.rows[i].values[j]" (click)="onCellClick($event, table, i, j)">
+                  </mat-form-field>
+                </td>
+              </ng-container>              
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  
+    
+
+    <button mat-button mat-raised-button color="primary" (click)="back_to_tables()">
+      Back
+    </button>
+    &nbsp;&nbsp;&nbsp;
+    <button mat-button mat-raised-button color="primary" (click)="generateTable()">
+      Next
+    </button>
+  </div>
+
+  <div *ngIf="currentPageNumber==3">
+    <h3>Generated table</h3>
+    <div *ngFor="let table of generatedTable">
+      <h3>{{ table.wordClass }} table</h3>
+      <table>
+        <thead>
+          <tr>
+            <ng-container *ngFor="let header of table.headers">
+              <th>{{ header }}</th>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of table.rows; let i = index">
+            <ng-container *ngFor="let value of row.values; let j = index">
+              <td>
+                <mat-form-field class="table-field">
+                  <input matInput type="text" [ngModel]="table.rows[i].values[j]"
+                    (ngModelChange)="table.rows[i].values[j]=$event" [ngModelOptions]="{updateOn: 'blur'}">
+                </mat-form-field>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+
+    <button mat-button mat-raised-button color="primary" (click)="back_to_tables()">
+      Back
+    </button>
+    &nbsp;&nbsp;&nbsp;
+    <button mat-button mat-raised-button (click)="checkAnswers()"
+      color="primary">{{ls.localize('exercise-check-answers')}}</button>
+
+
+  </div>

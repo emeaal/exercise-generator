@@ -1,0 +1,285 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+/*@font-face {
+    font-family: OpenSans;
+    src: url('./assets/OpenSans-Regular.ttf'); 
+  }*/
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: OpenSans, "Helvetica Neue", sans-serif;
+}
+
+.margin-container {
+    width: 50%;
+    padding-left: 10%;
+    padding-top: 30px;
+    overflow: visible;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+
+a {
+    color: white;
+    font-style: normal;
+    text-decoration: none;
+}
+
+b {
+    color: black;
+    font-style: normal;
+    text-decoration: none;
+}
+
+.active-link {
+    background-color: rgb(53, 0, 128, 0.6) !important;
+}
+
+.mat-toolbar {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.mdc-button {
+    /*make the arrow look ok*/
+    width: 140px;
+    left: 10px;
+    box-sizing: none;
+}
+
+.mat-success {
+    background-color: green;
+    color: #fff;
+}
+
+/*.menu-button {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.menu-text {
+    margin-right: 5px;
+}*/
+
+.arrow-down {
+    position: absolute;
+    top: 55%;
+    right: 4;
+    transform: translateY(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid white;
+}
+
+/*
+.menu-container {
+    position: relative;
+}*/
+
+.submenu {
+    display: flex;
+    position: relative;
+    left: 0;
+    z-index: 1;
+    background-color: white;
+    padding: 10px;
+    /* border: 1px solid gray;*/
+    box-shadow: 0 2px 0px rgba(0, 0, 0, 0.1);
+}
+
+.submenu .mat-mdc-button-base.mat-unthemed.active-link {
+    background-color: lightgray !important;
+}
+
+.submenu a:hover {
+    background-color: lightgray;
+}
+
+/*.submenu a {
+    size: 100px;
+  }*/
+
+.active-link {
+    background-color: rgb(46, 60, 139) !important;
+}
+
+.menu-container:hover .submenu {
+    direction: horizontal;
+}
+
+.spacer {
+    margin-left: 8%;
+    display: flex;
+}
+
+.spacer2 {
+    margin-left: 18%;
+    display: flex;
+}
+
+/*Panel for home page*/
+
+.home-panel {
+    width: 60%;
+    padding-left: 10%;
+    padding-top: 30px;
+}
+
+.li {
+    cursor: pointer;
+}
+
+/*container lesson preparer*/
+
+.example-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    align-items: flex-start;
+  }
+  
+  .example-radio-button {
+    margin: 5px;
+  }
+
+.prepared-lesson-container {
+    float: right;
+    padding-left: 60x;
+}
+
+.margin-container {
+    width: 50%;
+    padding-left: 300px;
+    padding-top: 30px;
+}
+
+
+.help-right {
+    position: absolute;
+    right: 90px;
+}
+
+.linebreak-button {
+    display: inline-block !important;
+    white-space: nowrap !important;
+    width: auto;
+}
+
+.info-table {
+    width: 80%;
+}
+
+
+.highlight {
+    background-color: rgba(0, 255, 98, 0.168);
+    border: 2px solid rgba(0, 223, 86, 0.493);
+    border-radius: 5px;
+    padding: 1px 2px;
+}
+
+.correct {
+    background-color: #c8e6c9; /* light green */
+  }
+  
+  .wrong {
+    background-color: #ffcdd2; /* light red */
+  }
+
+  .white-gap{
+    background-color: white;
+  }
+
+/* Table gen */
+
+.table-container {
+    padding-top: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    float: none;
+    align-items: center;
+    text-align: center;
+    min-height: 40vh;
+    flex-direction: column;
+}
+
+.table-field {
+    width: auto;
+    max-width: 100px; /* optional: set a maximum width to prevent cells from becoming too wide */
+}
+
+.highlighted-cell {
+    background-color: orange;
+  } 
+
+.table-size {
+    min-width: 100px;
+}
+
+.small-screen .mat-menu-trigger {
+    display: block;
+  }
+  
+  .small-screen .sidenav {
+    display: block;
+  }
+  
+  @media (max-width: 768px) {
+    .small-screen .mat-menu-trigger {
+      display: none;
+    align-items: stretch;
+    justify-content: space-between;
+    }
+  
+    .small-screen .sidenav {
+      display: none;
+    }
+  }
+
+
+  .hamburger-container {
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+    padding-left: 10%;
+    padding-top: 30px;
+    padding-right: 10%;
+  }
+
+  .sidenav-content {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  .sidenav {
+    padding: 20px;
+  }
+
+  .mat-mdc-form-field + .mat-mdc-form-field {
+    margin-left: 8px;
+  }
+
+
+/* Body */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+
+ 
+}

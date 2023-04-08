@@ -1,0 +1,21 @@
+9. Ansökan och personuppgifter
+Du kan ansöka om olika saker från myndigheter. Till exempel, kan du ansöka om ekonomiskt stöd från Migrationsverket. Det blir en ansökan per person. Du ska fylla i information om dig och sedan skriva under.
+Alla ansökningar behöver personuppgifter:
+* efternamn, till exempel, Svensson eller Soloviov.
+* förnamn, till exempel, Harald, eller Oleh.
+* födelsedatum, till exempel, 27 april 2004. I Sverige börjar man med år (ÅÅ), sedan månad (MM), och sist datum (DD). Det blir 040427 för 27 april 2004. 
+* personnummer, till exempel, 20040427-8765. Personnummer är ett  ID-nummer som Sverige använder. Först kommer födelsedag (ÅÅÅÅMMDD), och sedan fyra siffror, typ en personlig kod.
+* dossiernummer är ett ID-nummer som du kan få från en myndighet.
+* medborgarskap, till exempel, Ukraina eller Somalia. Vi skriver namn på ett land.
+* kön, till exempel, "man", "kvinna", och ibland "vill inte säga" eller "annat".
+* adress - här ska du skriva gatuadress (till exempel Vasagatan 34), postnummer (till exempel 46701) och ort (en stad, till exempel, Malmö eller en by, till exempel, Mark).
+Testa att fylla i tabellen med dina personuppgifter:
+förnamn
+efternamn
+födelsedatum
+dossiernummer
+medborgarskap
+kön
+gatuadress
+postnummer
+ort

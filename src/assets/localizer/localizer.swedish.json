@@ -1,0 +1,53 @@
+{
+    "welcome-text": "Välkommen till Swedish From Scratch! Här kan du göra följande:",
+    
+    "navigation-home": "Hem",
+    "navigation-generate": "Generera",
+    "navigation-table_ex": "Öva",
+    "navigation-practice": "Testa",
+    "navigation-table-gen": "Tabell",
+
+    "general-pos-NOUN": "substantiv",
+    "general-pos-VERB": "verb",
+    "general-pos-ADJ": "adjektiv",
+    "general-pos-PRON": "pronomen",
+    "general-pos-NUM": "räkneord",
+    "general-pos-ART": "artiklar",
+    "general-pos-ADV": "adverb",
+    "general-pos-SUBJ": "subjunktioner",
+    "general-pos-INTJ": "interjektioner",
+
+    "general-data-loading": "Laddar data...",
+
+    "menu-title": "Meny",
+    "menu-show-all-pos": "Visa alla ",
+    "menu-hide-all-pos": "Dölj alla ",
+    "menu-to-exercise": "Börja övningen",
+    "menu-target-items": "Ordförråd",
+    "menu-select-pos": "Välj ordklass",
+    "menu-select-lesson": "Välj en lektion",
+    "menu-validate": "Godkänn",
+    "menu-back-to-pos-select": "Ändra inställningar",
+
+    "language-selection-menu": "Ändra språk",
+    "language-selection-english": "Engelska",
+    "language-selection-swedish": "Svenska",
+    "language-selection-russian": "Ryska",
+    "language-selection-ukrainian": "Ukrainska",
+
+    "lesson": "Lektion",
+
+    "exercise-check-answers": "Kontrollera svaren",
+    "exercise-show-answers": "Visa svaren",
+    
+    "results-correct": "Rätt svar",
+    "results-of": "av",
+
+    "error-lesson-not-found": "Fel: Lektionen hittades inte!",
+
+    "cw-right": "HÖGER",
+    "cw-down": "NER",
+    "cw-hints": "Ledtrådar",
+    "cw-check-solution": "Kontrollera lösning",
+    "cw-show-solution": "Visa lösning"
+}

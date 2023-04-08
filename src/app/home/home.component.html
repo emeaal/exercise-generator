@@ -1,0 +1,83 @@
+<mat-toolbar color="primary" class="mat-toolbar">
+    <span><a routerLink="/home">SwedishFromScratch</a></span>
+    <div style="display:flex; align-items:center; height:100%;" *ngIf="bigScreen">
+        <a mat-button routerLink="/home" routerLinkActive="active-link" style="min-height:100%;">Home</a>
+        <a mat-button routerLink="/xgen" routerLinkActive="active-link" style="min-height:100%;">Create lesson
+            <span class="arrow-down"></span>
+        </a>
+        <a mat-button routerLink="/tablegen" routerLinkActive="active-link" style="min-height:100%;">Generate tables</a>
+        <a mat-button routerLink="/gram-x" routerLinkActive="active-link" style="min-height:100%;">Grammar</a>
+        <a mat-button routerLink="/url-create" routerLinkActive="active-link" style="min-height:100%;">URL</a>
+    </div>
+
+    <div style="float:right" *ngIf="bigScreen">
+        <button mat-button [matMenuTriggerFor]="menu">{{ls.localize('language-selection-menu')}}</button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item
+                (click)="changeLanguage('english')">{{ls.localize('language-selection-english')}}</button>
+            <button mat-menu-item
+                (click)="changeLanguage('swedish')">{{ls.localize('language-selection-swedish')}}</button>
+            <button mat-menu-item
+                (click)="changeLanguage('russian')">{{ls.localize('language-selection-russian')}}</button>
+            <!--<button mat-menu-item disabled="true">{{ls.localize('language-selection-ukrainian')}}</button>-->
+        </mat-menu>
+        <i class="material-icons">language</i>
+    </div>
+    <div *ngIf="!bigScreen">
+        <button mat-icon-button (click)="drawer.toggle()">
+            <mat-icon>menu</mat-icon>
+        </button>
+    </div>
+
+
+</mat-toolbar>
+
+
+<mat-drawer-container class="hamburger-container" mode="over" autosize>
+    <mat-drawer #drawer class="sidenav" position="end">
+        <div class="sidenav-content">
+            <mat-list>
+                <mat-list-item>
+                    <span matListItemTitle>><b routerLink="/home">Home</b></span>
+                </mat-list-item>
+                <mat-list-item>
+                    <span matListItemTitle><b routerLink="/xgen">Create lesson</b></span>
+                    <span matListItemLine>Start</span>
+                    <span>Review</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <span matListItemTitle><b routerLink="/tablegen">Generate tables</b></span>
+                    <span matListItemLine>Start</span>
+                    <span>Review</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <span matListItemTitle><b routerLink="/gram-x">Grammar</b></span>
+                    <span matListItemLine>Start</span>
+                    <span>Review</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <span matListItemTitle><b routerLink="/url-create">URL</b></span>
+                </mat-list-item>
+            </mat-list>
+
+        </div>
+    </mat-drawer>
+
+
+
+    <br>
+
+    <br>
+    <h1>
+        Welcome!
+    </h1>
+    <br>
+    <h2>
+        <li routerLink="/home" routerLinkActive="active-link">Home</li>
+        <li mat-button routerLink="/xgen" routerLinkActive="active-link">Create lesson</li>
+        <li mat-button routerLink="/url-create" routerLinkActive="active-link">URL</li>
+        <!--<a mat-button routerLink="/xgen" routerLinkActive="active-link">Placeholder</a>-->
+        <li mat-button routerLink="/tablegen" routerLinkActive="active-link">Generate tables</li>
+    </h2>
+
+</mat-drawer-container>
