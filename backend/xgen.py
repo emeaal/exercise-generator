@@ -59,6 +59,38 @@ def process(text):
 '''
 
 
+def process3(json_obj, chosen_pos, selectedEveryX, exclude_first,
+             exclude_last):
+    gaps = []
+    distance_to_prev_gap = 0
+    print("every x:", selectedEveryX)
+    prev_pos = None
+    json_obj = json.loads(json_obj)
+
+    for i, line in enumerate(json_obj):
+        if exclude_first and line['sent_id'] == 0:
+            continue
+        if exclude_last and i == len(json_obj) - 1:
+            continue
+        if line['pos'] == chosen_pos:
+            if distance_to_prev_gap < selectedEveryX:
+                if prev_pos == "MID":
+                    distance_to_prev_gap += 1
+                else:
+                    gaps.append(i)
+                    #gaps.append(line['text'])
+                    distance_to_prev_gap += 1
+            elif distance_to_prev_gap == selectedEveryX:
+                distance_to_prev_gap = 0
+                continue
+
+
+        prev_pos = line['pos']
+
+    print(gaps)
+    return gaps
+
+
 def process2(json_obj, exclude_first, exclude_last, everyx):
     res = {"targets": [], "targets_lemma": [], "tokens": [], "title": None}
     distance_to_prev_gap = -1
@@ -135,11 +167,14 @@ def create_table(words):
             continue
 
         data = response.json()
+        print(data)
         word_forms = data["hits"]["hits"][0]["_source"]["WordForms"]
-        pos = data["hits"]["hits"][0]["_source"]["FormRepresentations"][0]["partOfSpeech"]
+        pos = data["hits"]["hits"][0]["_source"]["FormRepresentations"][0][
+            "partOfSpeech"]
 
         if pos == "nn":
-            gender = data["hits"]["hits"][0]["_source"]["FormRepresentations"][0]["inherent"]
+            gender = data["hits"]["hits"][0]["_source"]["FormRepresentations"][
+                0]["inherent"]
             if gender == "u":
                 gender = "En"
             elif gender == "n":
@@ -165,13 +200,18 @@ def create_table(words):
                 "inflections": adj_table
             }
 
-    msd_word_list = [nouns[word] for word in nouns] + [verbs[word] for word in verbs] + [adj[word] for word in adj]
+    msd_word_list = [nouns[word]
+                     for word in nouns] + [verbs[word] for word in verbs
+                                           ] + [adj[word] for word in adj]
     print(msd_word_list)
     return msd_word_list
 
 
 def generate_verb_table(word_forms):
-    excluded_msd = ["c", "sms", "ci", "cm", "pres konj aktiv", "pret ind s-form", "pret konj aktiv", "pres konj s-form", "pres ind s-form "]
+    excluded_msd = [
+        "c", "sms", "ci", "cm", "pres konj aktiv", "pret ind s-form",
+        "pret konj aktiv", "pres konj s-form", "pres ind s-form "
+    ]
     msd_words = {}
 
     for form in word_forms:
@@ -183,16 +223,21 @@ def generate_verb_table(word_forms):
 
     return msd_words
 
+
 def generate_adj_table(word_forms):
     msd_words = {}
 
     for form in word_forms:
         msd = form["msd"]
-        if msd in ['pos indef sg u nom', 'pos indef sg n nom', 'pos indef pl nom', 'komp nom', 'super indef nom', 'writtenForm']:
+        if msd in [
+                'pos indef sg u nom', 'pos indef sg n nom', 'pos indef pl nom',
+                'komp nom', 'super indef nom', 'writtenForm'
+        ]:
             msd_words[msd] = []
             msd_words[msd].append(form["writtenForm"])
 
     return msd_words
+
 
 def generate_noun_table(gender, word_forms):
     msd_words = {}
@@ -202,7 +247,6 @@ def generate_noun_table(gender, word_forms):
         if msd not in ["c", "sms", "ci", "cm"]:
             msd_words[msd] = []
             msd_words[msd].append(form["writtenForm"])
-
     '''if gender == "En":
         msd_words["sg_indef_nom"] = [word_forms[0]["writtenForm"]]
     elif gender == "Ett":
@@ -252,7 +296,7 @@ def check_agreement(list1, list2):
             if not (parts[0] in list2 or parts[1] in list2):
                 return "incorrect"
         elif word not in list2:
-            return "incorrect"     
+            return "incorrect"
     return "correct"
 
 

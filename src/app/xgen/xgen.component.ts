@@ -215,21 +215,13 @@ export class XgenComponent {
     console.log('Selected everyX:', this.selectedEveryX);
   }
 
-
-  public checkedVPos: any;
-  public excludeFirstSentence = true;
-  public excludeLastSentence = true;
-  public sentences: any;
-  firstSentence: any;
-  lastSentence: any;
-  lastIndex = 0;
   
 
   shouldRenderInputBox(index: number): boolean {
     let lastCheckedIndex = -1;
     
     for (let i = index - 1; i >= 0; i--) {
-      if (this.isChecked[this.posData[i].pos]) {
+      if (this.validPos.includes(this.posData[i].pos)) {
         lastCheckedIndex = i;
         break;
       }
@@ -237,28 +229,39 @@ export class XgenComponent {
     
     const distance = index - lastCheckedIndex;
     
-    // Render an input box after every Nth checked word
+    // Render an input box after every Nth word
     return distance >= this.selectedEveryX && distance % this.selectedEveryX === 0;
   }
+
+  public checkedVPos: any;
+  public excludeFirstSentence = true;
+  public excludeLastSentence = true;
+  public sentences: any;
+  lastIndex = 0;
   
+  renderedData: any;
 
   preview() {
     this.currentPageNumber++;
     console.log(this.altAnswer);
     this.sentences = this.textareaValue.split('.').filter(sentence => sentence.trim() !== '');
     console.log(this.sentences);
-    this.firstSentence = this.sentences[0];
-    this.lastSentence = this.sentences[this.sentences.length - 1];
 
-    console.log(this.firstSentence, this.lastSentence)
-
+    console.log(this.posData)
     this.checkedVPos = Object.keys(this.isChecked).filter(vPos => this.isChecked[vPos]);
+    console.log(this.checkedVPos); // print the selected vPos values
+
+    this.backend.process3(this.posData, this.checkedVPos, parseInt(this.selectedEveryX), this.excludeFirstSentence, this.excludeLastSentence).subscribe({
+      next: (v) => {
+        this.renderedData = v;
+      }
+    });
+    
 
     console.log(Object.keys(this.isChecked).filter(vPos => this.isChecked[vPos]))
 
     this.isAnswerChecked = [];
 
-    console.log(this.checkedVPos); // print the selected vPos values
     console.log(this.selectedEveryX);
     console.log(this.posData); // make sure the posData array contains the expected objects
 

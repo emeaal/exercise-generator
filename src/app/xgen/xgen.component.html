@@ -233,6 +233,23 @@
                   </ng-container>
                 </ng-container>
               </div>
+
+              <div>
+                <ng-container *ngFor="let word of posData; let i = index">
+                  <ng-container *ngFor="let vPos of validPos">
+                    <ng-container *ngIf="vPos === word.pos">
+                      <ng-container *ngIf="shouldRenderInputBox(i)">
+                        <input type="text" class="gap" [(ngModel)]="userInput[i]"
+                          [ngClass]="{'correct': isAnswerChecked[i], 'wrong': !isAnswerChecked[i], 'white-gap': !AreAnswersChecked}"
+                          [id]="'gap-' + i">&nbsp;
+                      </ng-container>
+                      <ng-container *ngIf="!shouldRenderInputBox(i)">
+                        <span [innerHtml]="word.text" style="margin-right: 3px;"></span>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </div>              
               
           
             <div *ngIf="totalCount>1">

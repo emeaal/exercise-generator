@@ -30,6 +30,11 @@ export class BackendService {
         return this.http.get(url);
     }
 
+    process3(jsonString: string, chosenVpos: string, selectedEveryX: number, excludeFirstSentence: boolean, excludeLastSentence: boolean) {
+        const url = this.backendUrl + "process3?json=" + encodeURIComponent(JSON.stringify(jsonString)) + "&chosenVpos=" + chosenVpos + "&everyx=" + selectedEveryX;
+        return this.http.get(url);
+    }
+
     identify(me: string, pass: string) {
         const url = this.backendUrl + "identify?me=" + encodeURIComponent(me + pass);
         return this.http.get(url);
