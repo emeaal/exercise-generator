@@ -106,6 +106,8 @@
   </div>
   <div *ngIf="currentPageNumber==1">
 
+    <h3>Edit & review table</h3>
+
     <div *ngFor="let table of tableData">
       <h3>{{ table.wordClass }} table</h3>
       <table>
@@ -143,6 +145,8 @@
   </div>
   <div *ngIf="currentPageNumber==2">
 
+    <h3>Choose content of exercise</h3>
+
     <div *ngFor="let choice of exerciseChoices">
       <mat-checkbox [(ngModel)]="isChecked[choice]" [value]="choice">{{choice}}</mat-checkbox>
       <br />
@@ -162,11 +166,11 @@
           <tbody>
             <tr *ngFor="let row of table.rows; let i = index">
               <ng-container *ngFor="let value of row.values; let j = index">
-                <td>
-                  <mat-form-field class="table-field">
-                    <input matInput type="text" [(ngModel)]="table.rows[i].values[j]" (click)="onCellClick($event, table, i, j)">
+                <td [ngStyle]="{ 'border': isCellClicked(i, j) ? '2px solid blue' : 'none' }" (click)="onCellClick($event, table, i, j)">
+                  <mat-form-field appearance="outline" class="table-field-choose">
+                    <input matInput type="text" [(ngModel)]="table.rows[i].values[j]" style="cursor: pointer;" readonly>
                   </mat-form-field>
-                </td>
+                </td>                
               </ng-container>              
             </tr>
           </tbody>
@@ -201,7 +205,7 @@
         <tbody>
           <tr *ngFor="let row of table.rows; let i = index">
             <ng-container *ngFor="let value of row.values; let j = index">
-              <td>
+              <td [ngStyle]="{'border': '2px solid', 'border-color': isCorrect ? 'green' : 'red' }">
                 <mat-form-field class="table-field">
                   <input matInput type="text" [ngModel]="table.rows[i].values[j]"
                     (ngModelChange)="table.rows[i].values[j]=$event" [ngModelOptions]="{updateOn: 'blur'}">
@@ -218,6 +222,7 @@
     &nbsp;&nbsp;&nbsp;
     <button mat-button mat-raised-button (click)="checkAnswers()"
       color="primary">{{ls.localize('exercise-check-answers')}}</button>
+      <p> Your answer: {{userValue}}, Correct answer: {{expectedValue}}</p>
 
 
   </div>

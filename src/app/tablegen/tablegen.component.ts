@@ -27,10 +27,10 @@ export class TablegenComponent {
   entry: any;
   allMsdWords: any;
   tableData: any[] = [];
-i: any;
-expectedValue: any;
-userValue: any;
-k: any;
+  i: any;
+  expectedValue: any;
+  userValue: any;
+  k: any;
 
 
   changeLanguage(lang: string) {
@@ -77,6 +77,7 @@ k: any;
     this.allMsdWords = [];
     this.tableData = [];
     this.isChecked = {};
+    this.clickedCells = [];
   }
 
   addInputField() {
@@ -99,6 +100,7 @@ k: any;
 
 
   create_big_table() {
+    this.tableData = [];
     const inputFields = document.querySelectorAll('input[type="text"]');
     this.inputValues = Array.from(inputFields).map(input => (input as HTMLInputElement).value.trim());
     console.log(this.inputValues);
@@ -145,9 +147,13 @@ k: any;
           });
         }
         console.log(this.tableData)
-
+        if (allMsdWords.length === 0) {
+          this.snack.open("Word could not be found in database", "OK", { duration: 5000 });
+        }
         this.waiter.off();
       },
+      
+
       error: (error) => {
         this.snack.open("Something went wrong!", "OK", { duration: 5000 });
       }
@@ -160,10 +166,17 @@ k: any;
 
   generateTable() {
     this.currentPageNumber++;
-  
+
     // create a deep copy of tableData
     const newTableData = JSON.parse(JSON.stringify(this.tableData));
-  
+
+    this.clickedCells.forEach((clickedCell) => {
+      const { rowIndex, columnIndex } = clickedCell;
+      newTableData.forEach((table: { rows: { values: any[]; }[]; headers: any[]; }) => {
+        table.rows[rowIndex].values[columnIndex] = '';
+      });
+    });
+
     // modify the new table data
     newTableData.forEach((table: { rows: { values: any[]; }[]; headers: any[]; }) => {
       // if Random empty is checked, randomly select cells to leave empty
@@ -174,7 +187,7 @@ k: any;
           });
         });
       }
-  
+
       // if All def is checked, set cells under headers containing 'def' to empty string
       if (this.isChecked['All def']) {
         table.headers.forEach((header, index) => {
@@ -186,66 +199,83 @@ k: any;
         });
       }
 
-    if (this.isChecked['All indef']) {
-      table.headers.forEach((header, index) => {
-        if (header.includes('indef')) {
-          table.rows.forEach((row: { values: any[]; }) => {
-            row.values[index] = '';
-          });
-        }
-      });
-    }
-    if (this.isChecked['All sing']) {
-      table.headers.forEach((header, index) => {
-        if (header.includes('sg')) {
-          table.rows.forEach((row: { values: any[]; }) => {
-            row.values[index] = '';
-          });
-        }
-      });
-    }
+      if (this.isChecked['All indef']) {
+        table.headers.forEach((header, index) => {
+          if (header.includes('indef')) {
+            table.rows.forEach((row: { values: any[]; }) => {
+              row.values[index] = '';
+            });
+          }
+        });
+      }
+      if (this.isChecked['All sing']) {
+        table.headers.forEach((header, index) => {
+          if (header.includes('sg')) {
+            table.rows.forEach((row: { values: any[]; }) => {
+              row.values[index] = '';
+            });
+          }
+        });
+      }
 
-    if (this.isChecked['All plural']) {
-      table.headers.forEach((header, index) => {
-        if (header.includes('pl ')) {
-          table.rows.forEach((row: { values: any[]; }) => {
-            row.values[index] = '';
-          });
-        }
-      });
-    }});
-  
+      if (this.isChecked['All plural']) {
+        table.headers.forEach((header, index) => {
+          if (header.includes('pl ')) {
+            table.rows.forEach((row: { values: any[]; }) => {
+              row.values[index] = '';
+            });
+          }
+        });
+      }
+  });
+
     // set the generated table to the new table data
     this.generatedTable = newTableData;
   }
 
-  clickedCells: {rowIndex: number, columnIndex: number}[] = [];
+  clickedCells: { rowIndex: number, columnIndex: number }[] = [];
 
   onCellClick(event: MouseEvent, table: any, rowIndex: number, columnIndex: number) {
-    console.log("click")
+    console.log("click");
+    const clickedCell = { rowIndex, columnIndex };
+    const index = this.clickedCells.findIndex(cell => cell.rowIndex === rowIndex && cell.columnIndex === columnIndex);
+    if (index > -1) {
+      // Cell is already clicked, so remove it from the clickedCells array
+      this.clickedCells.splice(index, 1);
+    } else {
+      // Cell is not already clicked, so add it to the clickedCells array
+      this.clickedCells.push(clickedCell);
+    }
   }
   
-  public isCorrect: boolean = false;
+  isCellClicked(rowIndex: number, columnIndex: number): boolean {
+    return this.clickedCells.some(cell => cell.rowIndex === rowIndex && cell.columnIndex === columnIndex);
+  }
   
+
+
+
+  public isCorrect: boolean = false;
+
   checkAnswers() {
     console.log("checking answers...")
     for (let i = 0; i < this.tableData.length; i++) {
       for (let j = 0; j < this.tableData[i].rows.length; j++) {
         for (let k = 0; k < this.tableData[i].rows[j].values.length; k++) {
           const expectedValue = this.tableData[i].rows[j].values[k];
-          console.log(expectedValue)
           const userValue = this.generatedTable[i].rows[j].values[k];
           if (userValue === expectedValue) {
             this.isCorrect = true;
           } else {
             this.isCorrect = false;
-          }       
-          console.log(expectedValue, ":", userValue, ":", this.isCorrect)   
-        }
+          }
+          if (this.isCorrect == false) {
+          console.log("your answer: ", userValue, "expected answer: ", expectedValue,  this.isCorrect)
+        }}
       }
     }
   }
-  
-  
+
+
 
 }

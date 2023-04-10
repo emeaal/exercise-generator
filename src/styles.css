@@ -198,6 +198,8 @@ b {
     background-color: white;
   }
 
+
+
 /* Table gen */
 
 .table-container {
@@ -217,6 +219,12 @@ b {
     max-width: 100px; /* optional: set a maximum width to prevent cells from becoming too wide */
 }
 
+.table-field-choose {
+    width: auto;
+    max-width: 100px; /* optional: set a maximum width to prevent cells from becoming too wide */
+    flex-direction: inherit !important;
+}
+
 .highlighted-cell {
     background-color: orange;
   } 
@@ -224,6 +232,7 @@ b {
 .table-size {
     min-width: 100px;
 }
+
 
 .small-screen .mat-menu-trigger {
     display: block;
