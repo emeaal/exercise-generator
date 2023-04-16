@@ -2,10 +2,52 @@
     "welcome-text": "Welcome to Swedish From Scratch! Choose between the following:",
 
     "navigation-home": "Home",
-    "navigation-generate": "Create lesson",
-    "navigation-table_ex": "Practice",
-    "navigation-practice": "URL",
-    "navigation-table-gen": "Tables",
+    "navigation-xgen": "Cloze gap exercise",
+    "navigation-table-gen": "Table exercise",
+    "navigation-gram-x": "Grammar exercises",
+    "navigation-url-create": "URL",
+
+    "submenu-start": "Start",
+    "submenu-review": "Review",
+    "submenu-options": "Exercise options",
+    "submenu-view-lesson": "View lesson",
+
+    "menu-start": "Start",
+    "menu-load-lesson": "Select lesson",
+    "menu-write-text": "Write your own text",
+    "menu-ln": "Lesson number",
+    "menu-lesson-title": "Title",
+    "menu-enter-text": "Enter text here",
+
+    "button-review": "Review",
+    "button-clear": "Clear",
+    "button-clear-all": "Clear all",
+    "button-process": "Process!",
+    "button-create-table": "Create table",
+    "button-next": "Next",
+    "button-back": "Back",
+    "button-check-answers": "Check answers",
+
+    "first-table-header": "Create inflection table exercise",
+    "second-table-header": "Type in your words",
+    "choose-table-content": "Choose content of exercise",
+    "third-table-header": "Generated table",
+
+    "header-edit-review": "Edit & review table",
+    "noun-table": "Noun table",
+    "verb-table": "Verb table",
+    "adj-table": "Adjective table",
+
+    "checkbox-random-empty": "Random empty cells",
+    "checkbox-manual-choice": "Choose manually",
+    "tooltip-manuel-choice": "Choose the items that will be empty for table exercises",
+    
+    "table-header-word": "Word",
+    "table-header-lemma": "Lemma",
+    "table-header-pos": "POS",
+    "table-header-msd": "MSD",
+    "table-header-choose": "Choose for exercise",
+
 
     "general-pos-NOUN": "nouns",
     "general-pos-VERB": "verbs",

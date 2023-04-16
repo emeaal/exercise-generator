@@ -13,7 +13,8 @@ const routes: Routes = [
   { path: 'xgen', component: XgenComponent},
   { path: 'url-create', component: UrlCreateComponent },
   { path: 'tablegen', component: TablegenComponent },
-  { path: 'gram-x', component: GramXComponent},
+  { path: 'gram-x', component: GramXComponent,
+  },
   { path: '**', component: HomeComponent },
 ];
 

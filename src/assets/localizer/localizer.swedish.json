@@ -1,11 +1,52 @@
 {
-    "welcome-text": "Välkommen till Swedish From Scratch! Här kan du göra följande:",
-    
+    "welcome-text": "Välkommen till Swedish From Scratch",
+
     "navigation-home": "Hem",
-    "navigation-generate": "Generera",
-    "navigation-table_ex": "Öva",
-    "navigation-practice": "Testa",
-    "navigation-table-gen": "Tabell",
+    "navigation-xgen": "Fyll-i-luckan",
+    "navigation-table-gen": "Böjningstabeller",
+    "navigation-gram-x": "Grammatikövningar",
+    "navigation-url-create": "URL",
+
+    "submenu-start": "Start",
+    "submenu-review": "Granska",
+    "submenu-options": "Övningsalternativ",
+    "submenu-view-lesson": "Visa övning",
+
+    "menu-start": "Start",
+    "menu-load-lesson": "Välj lektion",
+    "menu-write-text": "Skriv din egna text",
+    "menu-ln": "Lektionsnummer",
+    "menu-lesson-title": "TItel",
+    "menu-enter-text": "Skriv din text här",
+
+    "button-review": "Granska",
+    "button-clear": "Rensa",
+    "button-clear-all": "Rensa allt",
+    "button-process": "Nästa",
+    "button-next": "Nästa",
+    "button-back": "Tillbaka",
+    "button-check-answers": "Kontrollera svar",
+    "button-create-table": "Skapa tabell",
+
+    "first-table-header": "Skapa övningar med böjningstabeller",
+    "second-table-header": "Skriv in dina ord",
+    "choose-table-content": "Välj innehåll i övningen",
+    "third-table-header": "Färdig tabell",
+    "header-edit-review": "Ändra i och granska tabell",
+
+    "noun-table": "Tabell för substantiv",
+    "verb-table": "Tabell för verb",
+    "adj-table": "Tabell för adjektiv",
+    
+    "checkbox-random-empty": "Slumpmässigt tomma celler",
+    "checkbox-manual-choice": "Välj egna tomma celler",
+    "tooltip-manuel-choice": "Välj själv de celler som ska vara tomma i övningen",
+    
+    "table-header-word": "Ord",
+    "table-header-lemma": "Lemma",
+    "table-header-pos": "Ordklass",
+    "table-header-msd": "MSD",
+    "table-header-choose": "Välj för övning",
 
     "general-pos-NOUN": "substantiv",
     "general-pos-VERB": "verb",

@@ -1,14 +1,9 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { LocalizerService } from 'src/services/localizer.service';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { WaiterComponent } from '../waiter/waiter.component';
 import { BackendService } from "src/backend.service";
-import { forEach } from 'angular';
-
-interface InflectionData {
-  [inflection: string]: string[];
-}
 
 @Component({
   selector: 'app-tablegen',
@@ -17,6 +12,8 @@ interface InflectionData {
 })
 export class TablegenComponent {
   @ViewChild(WaiterComponent) waiter!: WaiterComponent;
+  @ViewChild('input', { static: false })
+  input!: ElementRef;
   isTablegenRoute = true;
   public validPos = ["NOUN", "VERB", "ADJ", "ADV", "PRON", "NUM", "ART", "SUBJ", "INTJ"];
   public currentPageNumber: number = 0;
@@ -37,7 +34,7 @@ export class TablegenComponent {
     this.ls.setLanguage(lang);
   }
 
-  constructor(private router: Router, private snack: MatSnackBar, ls: LocalizerService, private backend: BackendService) {
+  constructor(private router: Router, private snack: MatSnackBar, ls: LocalizerService, private backend: BackendService, private elem: ElementRef) {
     this.ls = ls;
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -47,27 +44,34 @@ export class TablegenComponent {
     });
   }
 
+  ngOnInit() {
+  }
+
   public word: string = '';
   public words: string[] = [];
   public inputValues: string[] = [];
 
   public exerciseChoices = ["Random empty", "All def", "All indef", "All sing", "All plural", "Choose manually"];
+
   public isChecked: { [choice: string]: boolean } = {};
 
 
 
   next() {
     this.currentPageNumber++;
+
   }
 
   back() {
     this.currentPageNumber--;
     console.log(this.currentPageNumber)
     this.tableData = [];
+    this.isAnswerChecked = [];
   }
 
   back_to_tables() {
     this.currentPageNumber--;
+    this.isAnswerChecked = [];
   }
 
   clearAll() {
@@ -78,6 +82,7 @@ export class TablegenComponent {
     this.tableData = [];
     this.isChecked = {};
     this.clickedCells = [];
+    this.isAnswerChecked = [];
   }
 
   addInputField() {
@@ -97,10 +102,14 @@ export class TablegenComponent {
     console.log("on input change")
   }
 
-
+  noun_headers = ['sg indef nom', 'sg indef gen', 'sg def nom', 'sg def gen', 'pl indef nom', 'pl indef gen', 'pl def nom', 'pl def gen']
+  verb_headers = ['imper', 'inf aktiv', 'pres ind aktiv', 'pret ind aktiv', 'sup aktiv']
+  adj_headers = ['pos indef sg u nom', 'pos indef sg n nom', 'pos indef pl nom', 'komp nom', 'super indef nom']
 
   create_big_table() {
     this.tableData = [];
+    this.isChecked = {};
+    this.clickedCells = {};
     const inputFields = document.querySelectorAll('input[type="text"]');
     this.inputValues = Array.from(inputFields).map(input => (input as HTMLInputElement).value.trim());
     console.log(this.inputValues);
@@ -118,6 +127,7 @@ export class TablegenComponent {
     const wordString = (words as any[]).join(",");
     this.backend.create_table(wordString).subscribe({
       next: (allMsdWords: any) => {
+        console.log(allMsdWords)
         // Group the words by word class
         const groupedData = allMsdWords.reduce((acc: { [x: string]: any[]; }, curr: { wordClass: any; }) => {
           const { wordClass } = curr;
@@ -137,30 +147,49 @@ export class TablegenComponent {
             continue;
           };
 
+          let headers = Object.keys(words[0].inflections);
+
+          // Check if the headers match with the headers defined for each part of speech
+          if (this.noun_headers.includes(headers[0])) {
+            headers = this.noun_headers;
+          } else if (this.verb_headers.includes(headers[0])) {
+            headers = this.verb_headers;
+          } else if (this.adj_headers.includes(headers[0])) {
+            headers = this.adj_headers;
+          }
+
           this.tableData.push({
             wordClass: wordClass,
-            headers: Object.keys(words[0].inflections),
+            headers: headers,
             rows: words.map((word: { word: any; inflections: Record<string, string[]>; }) => ({
               word: word.word,
-              values: Object.values(word.inflections).map(val => val.join(", "))
+              values: headers.map(header => {
+                if (word.inflections[header]) {
+                  return word.inflections[header].join(", ");
+                } else {
+                  return "";
+                }
+              })
             }))
           });
         }
+        this.waiter.off();
         console.log(this.tableData)
         if (allMsdWords.length === 0) {
           this.snack.open("Word could not be found in database", "OK", { duration: 5000 });
         }
-        this.waiter.off();
       },
-      
+
 
       error: (error) => {
         this.snack.open("Something went wrong!", "OK", { duration: 5000 });
       }
     });
-
-    this.next();
+    setTimeout(() => {
+      this.next();
+    }, 1500);
   }
+
 
   public generatedTable: any[] = [];
 
@@ -169,15 +198,21 @@ export class TablegenComponent {
 
     // create a deep copy of tableData
     const newTableData = JSON.parse(JSON.stringify(this.tableData));
+    console.log('tableData:', this.tableData);
+    console.log('newTableData:', newTableData);
 
-    this.clickedCells.forEach((clickedCell) => {
-      const { rowIndex, columnIndex } = clickedCell;
-      newTableData.forEach((table: { rows: { values: any[]; }[]; headers: any[]; }) => {
-        table.rows[rowIndex].values[columnIndex] = '';
+
+    Object.values(this.clickedCells).forEach((clickedCellsArray) => {
+      clickedCellsArray.forEach((clickedCell) => {
+        const { tableIndex, rowIndex, columnIndex } = clickedCell;
+        const table = newTableData[tableIndex];
+        if (table && table.rows[rowIndex]) {
+          table.rows[rowIndex].values[columnIndex] = '';
+        }
       });
     });
 
-    // modify the new table data
+    // get random cells
     newTableData.forEach((table: { rows: { values: any[]; }[]; headers: any[]; }) => {
       // if Random empty is checked, randomly select cells to leave empty
       if (this.isChecked['Random empty']) {
@@ -227,55 +262,81 @@ export class TablegenComponent {
           }
         });
       }
-  });
+    });
 
     // set the generated table to the new table data
     this.generatedTable = newTableData;
-  }
-
-  clickedCells: { rowIndex: number, columnIndex: number }[] = [];
-
-  onCellClick(event: MouseEvent, table: any, rowIndex: number, columnIndex: number) {
-    console.log("click");
-    const clickedCell = { rowIndex, columnIndex };
-    const index = this.clickedCells.findIndex(cell => cell.rowIndex === rowIndex && cell.columnIndex === columnIndex);
-    if (index > -1) {
-      // Cell is already clicked, so remove it from the clickedCells array
-      this.clickedCells.splice(index, 1);
-    } else {
-      // Cell is not already clicked, so add it to the clickedCells array
-      this.clickedCells.push(clickedCell);
-    }
-  }
-  
-  isCellClicked(rowIndex: number, columnIndex: number): boolean {
-    return this.clickedCells.some(cell => cell.rowIndex === rowIndex && cell.columnIndex === columnIndex);
-  }
-  
-
-
-
-  public isCorrect: boolean = false;
-
-  checkAnswers() {
-    console.log("checking answers...")
+    console.log(this.generatedTable)
     for (let i = 0; i < this.tableData.length; i++) {
       for (let j = 0; j < this.tableData[i].rows.length; j++) {
         for (let k = 0; k < this.tableData[i].rows[j].values.length; k++) {
-          const expectedValue = this.tableData[i].rows[j].values[k];
-          const userValue = this.generatedTable[i].rows[j].values[k];
-          if (userValue === expectedValue) {
-            this.isCorrect = true;
-          } else {
-            this.isCorrect = false;
-          }
-          if (this.isCorrect == false) {
-          console.log("your answer: ", userValue, "expected answer: ", expectedValue,  this.isCorrect)
-        }}
+          this.isAnswerChecked[k] = false;
+          console.log(this.isAnswerChecked)
+        }
       }
+    }
+
+  }
+
+  public clickedCells: { [tableIndex: number]: { rowIndex: number, columnIndex: number, tableIndex: number }[] } = {};
+
+
+  onCellClick(event: MouseEvent, tableIndex: number, rowIndex: number, columnIndex: number) {
+    const clickedCell: { tableIndex: number, rowIndex: number, columnIndex: number } = { tableIndex, rowIndex, columnIndex };
+
+    const clickedCellIndex = this.clickedCells[tableIndex]?.findIndex((cell: { tableIndex: number; rowIndex: number; columnIndex: any; }) => cell.rowIndex === rowIndex && cell.columnIndex === columnIndex);
+
+    if (clickedCellIndex > -1) {
+      // Cell is already clicked, so remove it from the clickedCells array
+      this.clickedCells[tableIndex].splice(clickedCellIndex, 1);
+    } else {
+      // Cell is not already clicked, so add it to the clickedCells array
+      if (!this.clickedCells[tableIndex]) {
+        this.clickedCells[tableIndex] = [];
+      }
+      this.clickedCells[tableIndex].push(clickedCell);
+    }
+
+    const clickedCellElement = (event.target as Element).closest('.table-cell');
+    if (clickedCellElement) {
+      clickedCellElement.classList.toggle('clicked');
+
     }
   }
 
 
+  isCellClicked(tableIndex: number, rowIndex: number, columnIndex: number): boolean {
+    if (!this.clickedCells[tableIndex]) {
+      return false;
+    }
+    return this.clickedCells[tableIndex].some(cell => cell.rowIndex === rowIndex && cell.columnIndex === columnIndex);
+  }
+
+  public isCorrect: boolean[] = [];
+  userInput: string[] = [];
+  public correctAnswer: string[] = [];
+  public wrongAnswer: string[] = [];
+
+  public isAnswerChecked: boolean[] = [];
+
+  checkAnswers() {
+    console.log(this.isAnswerChecked)
+    for (let i = 0; i < this.tableData.length; i++) {
+      for (let j = 0; j < this.tableData[i].rows.length; j++) {
+        for (let k = 0; k < this.tableData[i].rows[j].values.length; k++) {
+          const expectedAnswer = this.tableData[i].rows[j].values[k]
+          const userAnswer = this.generatedTable[i].rows[j].values[k]
+          if (expectedAnswer !== userAnswer) {
+            this.isAnswerChecked[k] = true;
+            this.isCorrect[k] = false;
+          } else {
+            this.isAnswerChecked[k] = true;
+            this.isCorrect[k] = true;
+          }
+        }
+      }
+    }
+    console.log(this.isAnswerChecked)
+  }  
 
 }

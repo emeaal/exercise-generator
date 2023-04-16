@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { LocalizerService } from 'src/services/localizer.service';
 import { BackendService } from 'src/backend.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,10 +11,6 @@ export interface Lesson {
   lessonNumber: string;
   title: string;
   textareaValue: string;
-}
-
-export interface WordDict {
-  [key: string]: any;
 }
 
 @Component({
@@ -30,7 +26,6 @@ export class GramXComponent {
   isGramXRoute = true;
   public currentPageNumber: number = 0;
   public currentPage: string = "add";
-  validPages: string[] = ['Home', 'Add new text', 'View all texts', 'Options', 'Preview'];
 
 
   public lessonNumber: string = "";
@@ -45,12 +40,26 @@ export class GramXComponent {
   public processedText: boolean = false;
   lemma: any;
 
+  isSmallScreen = false;
+
+  showToggle = false;
+  bigScreen = false;
+
+  panelOpenState = false;
+  public drawer: any;
+
+  checkScreenSize(): void {
+    this.bigScreen = window.innerWidth > 768;
+    window.addEventListener("resize", event => {
+      this.bigScreen = window.innerWidth > 768;
+    });
+  }
 
   changeLanguage(lang: string) {
     this.ls.setLanguage(lang);
   }
 
-  constructor(private router: Router, private snack: MatSnackBar, ls: LocalizerService, private backend: BackendService, private http: HttpClient) {
+  constructor(private router: Router, private route: ActivatedRoute, private snack: MatSnackBar, ls: LocalizerService, private backend: BackendService, private http: HttpClient) {
     this.ls = ls;
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -60,9 +69,7 @@ export class GramXComponent {
     });
   }
 
-  ngOnInit() {
-    this.loadLessons();
-  }
+  validPages: string[] = ['Start', 'Review', 'Exercise options', 'View lesson'];
 
   navigate(page: string) {
     if (this.validPages.includes(page)) {
@@ -71,6 +78,61 @@ export class GramXComponent {
       this.snack.open("Invalid page!", "OK", { duration: 5000 });
     }
   }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      console.log(params);
+      if (params["lessonNumber"]) {
+        this.lessonNumber = params["lessonNumber"].toString();
+      }
+      if (params["lessonTitle"]) {
+        this.lessonTitle = params["lessonTitle"];
+      }
+      if (params["posData"]) {
+        this.posData = JSON.parse(params["posData"]);
+      }
+      if (params["isChosen"]) {
+        this.isChosen = JSON.parse(params["isChosen"]);
+      }
+      if (params["isCorrect"]) {
+        this.isCorrect = JSON.parse(params["isCorrect"]);
+      }
+      if (params["selectedLemmas"]) {
+        this.selectedLemmas = JSON.parse(params["selectedLemmas"]);
+      }
+      // Check if all required parameters are present
+      if (this.lessonNumber && this.lessonTitle && this.posData && this.isChosen && this.isCorrect && this.selectedLemmas) {
+        this.currentPageNumber = 2;
+      } else {
+        this.currentPageNumber = 0;
+      }
+    });
+    this.loadLessons();
+    this.checkScreenSize();
+  
+    // subscribe to NavigationEnd event of the Router
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.checkScreenSize();
+      }
+    });
+  }
+  
+
+  updateUrl(): void {
+    const queryParams = {
+      lessonNumber: this.lessonNumber.toString(),
+      lessonTitle: this.lessonTitle,
+      posData: JSON.stringify(this.posData),
+      isChosen: JSON.stringify(this.isChosen),
+      isCorrect: JSON.stringify(this.isCorrect),
+      selectedLemmas: JSON.stringify(this.selectedLemmas),
+    };
+    this.router.navigate([], { queryParams, queryParamsHandling: 'merge' });
+    console.log("Updated URL: " + window.location.href);
+  }
+  
+  
 
   clearForm() {
     console.log('Clearing form data');
@@ -109,10 +171,35 @@ export class GramXComponent {
     }
   }
 
+
+  public isCorrect: boolean[] = [];
+  userInput: string[] = [];
+  public isAnswerChecked: boolean[] = [];
+
+  checkAnswers() {
+    console.log("checking answers")
+    this.isCorrect = [];
+    for (let i = 0; i < this.posData.length; i++) {
+      const word = this.posData[i];
+      if (this.isChosen[word.lemma]) {
+        const input = this.userInput[i];
+        if (input == word.text) {
+          this.isCorrect[i] = true
+          this.isAnswerChecked[i] = true;
+        }
+        else if (input !== undefined)
+        this.isCorrect[i] = false
+        this.isAnswerChecked[i] = true;
+      }
+    }
+    console.log("Updated URL: " + window.location.href);
+  }
+  
+  
+  
+  
   selectedLemmas: string[] = [];
   isChosen: { [key: string]: boolean } = {};
-
-
 
 
   make_grammar_ex(ln: string, title: string, text: string) {
@@ -143,6 +230,7 @@ export class GramXComponent {
         this.snack.open("Something went wrong!", "OK", { duration: 5000 });
       }
     });
+    console.log("Updated URL: " + window.location.href);
   }
 
   checkAgreement(list1: string[], list2: string[]): void {
@@ -212,11 +300,16 @@ export class GramXComponent {
 
   next() {
     this.currentPageNumber++;
+    this.updateUrl();
+    console.log("Updated URL: " + window.location.href);
   }
 
   back() {
     this.currentPageNumber--;
     console.log(this.currentPageNumber)
+    for (let i = 0; i < this.posData.length; i++) {
+      this.isAnswerChecked[i] = false;
+    }
   }
 
 }

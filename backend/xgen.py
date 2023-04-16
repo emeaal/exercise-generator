@@ -1,8 +1,6 @@
-import urllib.request
 import xml.etree.ElementTree as ET
 import requests
 import json
-import stanza
 
 
 def process(text):
@@ -37,53 +35,37 @@ def process(text):
     return sentences
 
 
-'''
-model = stanza.Pipeline('sv', model_dir="/Users/emelieaalto/stanza_resources")
-
-def process(text):
-    res = []
-    parse = model(text)
-    sents = parse.sentences
-    max_sent_id = len(sents) - 1
-    for i,sentence in enumerate(sents):
-        for token in sentence.words:
-            nobj = {}
-            nobj["sent_id"] = i
-            nobj["max_sent_id"] = max_sent_id
-            nobj["text"] = token.text
-            nobj["lemma"] = token.lemma
-            nobj["pos"] = token.pos
-            res.append(nobj)
-    print(res)
-    return res
-'''
-
-
-def process3(json_obj, chosen_pos, selectedEveryX, exclude_first,
-             exclude_last):
+def process3(json_obj, chosen_pos, selectedEveryX, excludeFirstSentence,
+             excludeLastSentence):
     gaps = []
     distance_to_prev_gap = 0
     print("every x:", selectedEveryX)
+    print(chosen_pos)
+    print(excludeFirstSentence, excludeLastSentence)
     prev_pos = None
     json_obj = json.loads(json_obj)
 
+    chosen_pos_list = chosen_pos.split(',')
+    last_sent_id = max([line['sent_id'] for line in json_obj])
+    print(type(chosen_pos))
+
     for i, line in enumerate(json_obj):
-        if exclude_first and line['sent_id'] == 0:
+        if excludeFirstSentence == True and line['sent_id'] == 0:
             continue
-        if exclude_last and i == len(json_obj) - 1:
+        if excludeLastSentence == True and line['sent_id'] == last_sent_id:
             continue
-        if line['pos'] == chosen_pos:
-            if distance_to_prev_gap < selectedEveryX:
+        if distance_to_prev_gap >= 1 and distance_to_prev_gap < selectedEveryX:
+            distance_to_prev_gap += 1
+        elif distance_to_prev_gap == selectedEveryX:
+            distance_to_prev_gap = 0
+            continue
+        else:
+            if line['pos'] in chosen_pos_list:
                 if prev_pos == "MID":
                     distance_to_prev_gap += 1
                 else:
                     gaps.append(i)
-                    #gaps.append(line['text'])
                     distance_to_prev_gap += 1
-            elif distance_to_prev_gap == selectedEveryX:
-                distance_to_prev_gap = 0
-                continue
-
 
         prev_pos = line['pos']
 

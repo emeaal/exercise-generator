@@ -162,6 +162,13 @@ b {
     padding-top: 30px;
 }
 
+.gap {
+    border: 1px solid gray;
+    /*box-sizing: border-box;*/
+    font-size: inherit;
+    font-family: inherit;
+}
+
 
 .help-right {
     position: absolute;
@@ -186,17 +193,23 @@ b {
     padding: 1px 2px;
 }
 
+.white-gap {
+    background-color: white !important ;
+}
+
 .correct {
-    background-color: #c8e6c9; /* light green */
+    background-color: #c8e6c9 !important ;/* light green */
   }
   
-  .wrong {
-    background-color: #ffcdd2; /* light red */
+.incorrect {
+    background-color: #ffcdd2 !important;
   }
 
-  .white-gap{
-    background-color: white;
-  }
+  .panel-right {
+    width: 20%;
+    float: right;
+    padding: 10px;
+}
 
 
 
@@ -214,24 +227,75 @@ b {
     flex-direction: column;
 }
 
+
 .table-field {
     width: auto;
     max-width: 100px; /* optional: set a maximum width to prevent cells from becoming too wide */
 }
 
-.table-field-choose {
-    width: auto;
-    max-width: 100px; /* optional: set a maximum width to prevent cells from becoming too wide */
-    flex-direction: inherit !important;
-}
-
-.highlighted-cell {
-    background-color: orange;
-  } 
-
 .table-size {
     min-width: 100px;
 }
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th,
+  td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    width: 100px;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  .table-cell {
+    border: 2px solid black;
+    padding: 4px;
+  }
+  
+  .table-cell.clicked {
+    border: 3px solid blue;
+    padding: 4px;
+  }
+
+.table-cell.correct {
+    background-color: #c8e6c9 !important ;/* light green */
+}
+
+.table-cell.wrong {
+    background-color: #ffcdd2 !important;
+}
+
+ .table-text {
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: inherit;
+    font-family: inherit;
+  }
+  
+  input:focus {
+    outline: none;
+  }
+
+  .cell-border {
+    border: none;
+  }
+  
+  .cell-border.clicked {
+    border: 2px solid blue;
+  }
+
+/* Grammar exercises*/
+
+
+  
 
 
 .small-screen .mat-menu-trigger {

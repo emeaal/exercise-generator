@@ -1,13 +1,13 @@
 <mat-toolbar color="primary">
     <div style="display:flex; align-items:center; height:100%;">
-      <span><a routerLink="/home">SwedishFromScratch</a></span>
-      <a mat-button routerLink="/home" routerLinkActive="active-link" style="min-height:100%;">Home</a>
-      <a mat-button routerLink="/xgen" routerLinkActive="active-link" style="min-height:100%;">Create lesson
-          <span class="arrow-down"></span>
-      </a>
-      <a mat-button routerLink="/tablegen" routerLinkActive="active-link" style="min-height:100%;">Generate tables</a>
-      <a mat-button routerLink="/gram-x" routerLinkActive="active-link" style="min-height:100%;">Grammar</a>
-      <a mat-button routerLink="/url-create" routerLinkActive="active-link" style="min-height:100%;">URL</a>
+        <span><a routerLink="/home">SwedishFromScratch</a></span>
+        <a mat-button routerLink="/home" routerLinkActive="active-link" style="min-height:100%;">Home</a>
+        <a mat-button routerLink="/xgen" routerLinkActive="active-link" style="min-height:100%;">Create lesson
+            <span class="arrow-down"></span>
+        </a>
+        <a mat-button routerLink="/tablegen" routerLinkActive="active-link" style="min-height:100%;">Generate tables</a>
+        <a mat-button routerLink="/gram-x" routerLinkActive="active-link" style="min-height:100%;">Grammar</a>
+        <a mat-button routerLink="/url-create" routerLinkActive="active-link" style="min-height:100%;">URL</a>
     </div>
 
     <div style="float:right">
@@ -111,8 +111,8 @@
                     POS</button>
                 <br /><br />
                 <div *ngIf="showValidPos">
-                    <div *ngFor="let vPos of validPos">
-                        {{vPos}}
+                    <div *ngFor="let posLabel of validLabels">
+                        {{posLabels[posLabel]}}
                     </div>
                 </div>
             </div>
@@ -142,8 +142,8 @@
                                 (blur)="posData[i]['pos'] = pos.value"></mat-form-field></td>
                     <td><mat-form-field><input matInput type="text" [(ngModel)]="altAnswer[i]" #altAnswerInput
                                 (blur)="posData[i]['altAnswer'] = altAnswerInput.value"></mat-form-field></td>
-                    <td><mat-form-field><input matInput type="text" #distractors
-                                (blur)="posData[i]['distractors'] = distractors.value"></mat-form-field></td>
+                    <!-- <td><mat-form-field><input matInput type="text" #distractors
+                                (blur)="posData[i]['distractors'] = distractors.value"></mat-form-field></td>-->
                     <td><mat-checkbox #exclude (change)="posData[i]['exclude'] = exclude.checked"></mat-checkbox></td>
                     <td><mat-icon (click)="deleteWord(i)"
                             style="color: darkred; cursor: pointer;">delete_forever</mat-icon></td>
@@ -174,8 +174,9 @@
             <br />
             Generate exercises for the following POS:
             <br />
-            <div *ngFor="let vPos of validPos">
-                <mat-checkbox [(ngModel)]="isChecked[vPos]" [value]="vPos">{{vPos}}</mat-checkbox>
+            <div *ngFor="let posLabel of validLabels">
+                <mat-checkbox [(ngModel)]="isChecked[posLabel]"
+                    [value]="posLabel">{{posLabels[posLabel]}}</mat-checkbox>
                 <br />
             </div>
 
@@ -186,8 +187,9 @@
             <mat-checkbox [(ngModel)]="excludeLastSentence">Exclude last sentence from exercise
                 generation</mat-checkbox>
             <br />
-
+            <mat-checkbox [(ngModel)]="showItems">Show target items</mat-checkbox>
             <br />
+
 
             <br />
             Include only every
@@ -201,6 +203,8 @@
             </mat-form-field>
             word for exercise generation
             <br />
+
+
             <button mat-button mat-raised-button color="primary" (click)="back()">Back</button>
             &nbsp;&nbsp;&nbsp;
             <button mat-button mat-raised-button color="primary" (click)="preview()">Preview exercise</button>
@@ -211,51 +215,55 @@
         </div>
         <div *ngIf="currentPageNumber==3">
             <h2>{{lessonNumber }} {{ lessonTitle }} </h2>
-          
-            <div>
-                <ng-container *ngFor="let word of posData; let i = index">
-                  <ng-container *ngFor="let vPos of validPos">
-                    <ng-container *ngIf="vPos === word.pos">
-                      <ng-container *ngIf="isChecked[vPos]">
-                        <ng-container *ngIf="shouldRenderInputBox(i)">
-                          <input type="text" class="gap" [(ngModel)]="userInput[i]"
-                            [ngClass]="{'correct': isAnswerChecked[i], 'wrong': !isAnswerChecked[i], 'white-gap': !AreAnswersChecked}"
-                            [id]="'gap-' + i">&nbsp;
-                        </ng-container>
-                        <ng-container *ngIf="!shouldRenderInputBox(i)">
-                          <span [innerHtml]="word.text" style="margin-right: 3px;"></span>
-                        </ng-container>
-                      </ng-container>
-                      <ng-container *ngIf="!isChecked[vPos]">
-                        <span [innerHtml]="word.text" style="margin-right: 3px;"></span>
-                      </ng-container>
-                    </ng-container>
-                  </ng-container>
-                </ng-container>
-              </div>
 
-              <div>
+            <div *ngIf="renderedData">
                 <ng-container *ngFor="let word of posData; let i = index">
-                  <ng-container *ngFor="let vPos of validPos">
-                    <ng-container *ngIf="vPos === word.pos">
-                      <ng-container *ngIf="shouldRenderInputBox(i)">
-                        <input type="text" class="gap" [(ngModel)]="userInput[i]"
-                          [ngClass]="{'correct': isAnswerChecked[i], 'wrong': !isAnswerChecked[i], 'white-gap': !AreAnswersChecked}"
-                          [id]="'gap-' + i">&nbsp;
-                      </ng-container>
-                      <ng-container *ngIf="!shouldRenderInputBox(i)">
-                        <span [innerHtml]="word.text" style="margin-right: 3px;"></span>
-                      </ng-container>
+                    <ng-container *ngIf="word.pos === 'LINEBREAK'">
+                        <br><br>
                     </ng-container>
-                  </ng-container>
+                    <ng-container *ngFor="let vPos of validPos">
+                        <ng-container *ngIf="vPos === word.pos">
+                            <ng-container *ngIf="renderedData.includes(i)">
+                                <input type="text" class="gap" [(ngModel)]="userInput[i]"
+                                    [ngClass]="{'correct': isAnswerChecked[i] && isCorrect[i], 'incorrect': isAnswerChecked[i] && !isCorrect[i], 'white-gap': !isAnswerChecked[i]}"
+                                    [id]="'gap-' + i" [size]="word.accept.length">
+                                <ng-container
+                                    *ngIf="posData[i + 1] && !['PUNCT', 'MAD', 'MID'].includes(posData[i + 1].pos)">
+                                    &nbsp;
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="!renderedData.includes(i)">
+                                <span [innerHtml]="word.text" style="margin-right: 3px;"></span>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
                 </ng-container>
-              </div>              
-              
-          
-            <div *ngIf="totalCount>1">
-              <h2>You got: {{correctCount}}/{{totalCount}}!</h2>
             </div>
-          
+
+
+            <div class="panel-right">
+                <div *ngIf="showItems">
+                    <button mat-button mat-raised-button color="white"
+                        (click)="toggleList()">{{ls.localize('menu-target-items')}}</button>
+                    <br /><br />
+                    <ul *ngIf="showListItems">
+                        <ng-container *ngFor="let word of posData; let i = index">
+                            <ng-container *ngFor="let vPos of validPos">
+                                <ng-container *ngIf="vPos === word.pos">
+                                    <li *ngIf="renderedData.includes(i)">
+                                        <span [innerHtml]="word.text"></span>
+                                    </li>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div *ngIf="totalCount>1">
+                <h2>You got: {{correctCount}}/{{totalCount}}!</h2>
+            </div>
 
 
             <br>
@@ -266,9 +274,21 @@
             &nbsp;&nbsp;&nbsp;
             <button mat-button mat-raised-button (click)="showAnswers()"
                 color="accent">{{ls.localize('exercise-show-answers')}}</button>
-        </div>
+            <mat-checkbox #fxm>Start exercise directly</mat-checkbox>
 
-        <!--<div *ngIf="currentPage=='view'">
+            <br /><br />
+            <button mat-button mat-raised-button color="primary" (click)="generateUrl(fxm.checked)">Create URL</button>
+            <br /><br />
+
+            <div *ngIf="final_url">
+                Here is your URL: <br />
+                <span class="url-span">{{final_url}}</span>
+            </div>
+
+
+
+
+            <!--<div *ngIf="currentPage=='view'">
     <h2>View all texts</h2>
 </div>
 
@@ -277,5 +297,5 @@
     <br/><br/>
     Nothing to see here.
 </div> -->
+        </div>
     </div>
-</div>

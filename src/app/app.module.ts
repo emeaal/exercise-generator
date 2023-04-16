@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { LocalizerService } from 'src/services/localizer.service';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,8 +21,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatListModule} from '@angular/material/list';
+import { MatSidenavModule} from '@angular/material/sidenav';
+import { MatListModule} from '@angular/material/list';
 
 
 import { XgenComponent } from './xgen/xgen.component';
@@ -46,6 +48,7 @@ import { GramXComponent } from './gram-x/gram-x.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     MatToolbarModule,
     MatButtonModule,
@@ -59,7 +62,6 @@ import { GramXComponent } from './gram-x/gram-x.component';
     MatCheckboxModule,
     MatRadioModule,
     MatSelectModule,
-    HttpClientModule,
     MatProgressBarModule,
     MatTooltipModule,
     MatTableModule,
@@ -67,7 +69,8 @@ import { GramXComponent } from './gram-x/gram-x.component';
     MatSidenavModule,
     MatListModule
   ],
-  providers: [MatSnackBar],
+  providers: [MatSnackBar,
+    LocalizerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -47,10 +47,10 @@ def process3():
     json_obj = request.args.get("json", default="", type=str)
     chosen_pos = request.args.get("chosenVpos", default="", type=str)
     selectedEveryX = request.args.get("everyx", type=int)
-    exclude_first = request.args.get("excludeFirstSentence", default=False, type=bool)
-    exclude_last = request.args.get("excludeLastSentence", default=False, type=bool)
+    excludeFirstSentence = request.args.get("excludeFirstSentence", default=False, type=bool)
+    excludeLastSentence = request.args.get("excludeLastSentence", default=False, type=bool)
     print("Recevied data")
-    return cors_response(xgen.process3(json_obj, chosen_pos, selectedEveryX, exclude_first, exclude_last))
+    return cors_response(xgen.process3(json_obj, chosen_pos, selectedEveryX, excludeFirstSentence, excludeLastSentence))
 
 @app.route("/identify")
 def identify():

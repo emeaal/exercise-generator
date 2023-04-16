@@ -1,14 +1,17 @@
 <mat-toolbar color="primary" class="mat-toolbar">
+    <div style="display:flex; align-items:center; height:100%;">
     <span><a routerLink="/home">SwedishFromScratch</a></span>
-    <div style="display:flex; align-items:center; height:100%;" *ngIf="bigScreen">
-        <a mat-button routerLink="/home" routerLinkActive="active-link" style="min-height:100%;">Home</a>
-        <a mat-button routerLink="/xgen" routerLinkActive="active-link" style="min-height:100%;">Create lesson
+    <div style="display:flex; align-items:center; height:100%;"*ngIf="bigScreen">
+        <a mat-button routerLink="/home" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-home')}} </a>
+        <a mat-button routerLink="/xgen" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-xgen')}}
             <span class="arrow-down"></span>
         </a>
-        <a mat-button routerLink="/tablegen" routerLinkActive="active-link" style="min-height:100%;">Generate tables</a>
-        <a mat-button routerLink="/gram-x" routerLinkActive="active-link" style="min-height:100%;">Grammar</a>
-        <a mat-button routerLink="/url-create" routerLinkActive="active-link" style="min-height:100%;">URL</a>
+        <a mat-button routerLink="/tablegen" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-table-gen')}}</a>
+        <a mat-button routerLink="/gram-x" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-gram-x')}}</a>
+        <a mat-button routerLink="/url-create" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-url-create')}}</a>
     </div>
+    </div>
+
 
     <div style="float:right" *ngIf="bigScreen">
         <button mat-button [matMenuTriggerFor]="menu">{{ls.localize('language-selection-menu')}}</button>
@@ -38,25 +41,26 @@
         <div class="sidenav-content">
             <mat-list>
                 <mat-list-item>
-                    <span matListItemTitle>><b routerLink="/home">Home</b></span>
+                    <span matListItemTitle>><b routerLink="/home">{{ls.localize('navigation-home')}}                    </b></span>
                 </mat-list-item>
                 <mat-list-item>
-                    <span matListItemTitle><b routerLink="/xgen">Create lesson</b></span>
+                    <span matListItemTitle><b routerLink="/xgen">{{ls.localize('navigation-xgen')}}</b></span>
                     <span matListItemLine>Start</span>
                     <span>Review</span>
                 </mat-list-item>
                 <mat-list-item>
-                    <span matListItemTitle><b routerLink="/tablegen">Generate tables</b></span>
+                    <span matListItemTitle><b routerLink="/tablegen">{{ls.localize('navigation-table-gen')}}
+                    </b></span>
                     <span matListItemLine>Start</span>
                     <span>Review</span>
                 </mat-list-item>
                 <mat-list-item>
-                    <span matListItemTitle><b routerLink="/gram-x">Grammar</b></span>
+                    <span matListItemTitle><b routerLink="/gram-x">{{ls.localize('navigation-gram-x')}}</b></span>
                     <span matListItemLine>Start</span>
                     <span>Review</span>
                 </mat-list-item>
                 <mat-list-item>
-                    <span matListItemTitle><b routerLink="/url-create">URL</b></span>
+                    <span matListItemTitle><b routerLink="/url-create">{{ls.localize('navigation-url-create')}}</b></span>
                 </mat-list-item>
             </mat-list>
 
@@ -73,11 +77,12 @@
     </h1>
     <br>
     <h2>
-        <li routerLink="/home" routerLinkActive="active-link">Home</li>
-        <li mat-button routerLink="/xgen" routerLinkActive="active-link">Create lesson</li>
-        <li mat-button routerLink="/url-create" routerLinkActive="active-link">URL</li>
+        <li routerLink="/home" routerLinkActive="active-link">{{ls.localize('navigation-home')}} </li>
+        <li mat-button routerLink="/xgen" routerLinkActive="active-link">{{ls.localize('navigation-xgen')}}</li>
         <!--<a mat-button routerLink="/xgen" routerLinkActive="active-link">Placeholder</a>-->
-        <li mat-button routerLink="/tablegen" routerLinkActive="active-link">Generate tables</li>
+        <li mat-button routerLink="/gram-x" routerLinkActive="active-link">{{ls.localize('navigation-gram-x')}}</li>
+        <li mat-button routerLink="/tablegen" routerLinkActive="active-link">{{ls.localize('navigation-table-gen')}}</li>
+        <li mat-button routerLink="/url-create" routerLinkActive="active-link">{{ls.localize('navigation-url-create')}}</li>
     </h2>
 
 </mat-drawer-container>

@@ -1,5 +1,5 @@
 import { Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
@@ -24,6 +24,7 @@ export interface Lesson {
 export class XgenComponent {
 
   ls: LocalizerService;
+  gapIndexes: any;
 
   changeLanguage(lang: string) {
     this.ls.setLanguage(lang);
@@ -32,16 +33,11 @@ export class XgenComponent {
 
   @ViewChild(WaiterComponent) waiter!: WaiterComponent;
 
-
-  //links = ['Home', 'Add new text', 'View all texts', 'Options', 'Preview', 'Shout'];
-  //activeLink = this.links[this.selectedIndex];
-  //identified = true;
   public xlangs: string[] = ['Swedish', 'English'];
   selectedIndex = 0;
 
   currentTab!: string;
   validPages: string[] = ['Home', 'Add new text', 'View all texts', 'Options', 'Preview'];
-  // currentPage: string = 'Home';
 
   isChecked: { [key: string]: boolean } = {};
   public selectedEveryX: any = '4';
@@ -50,10 +46,26 @@ export class XgenComponent {
   public currentPage: string = "add";
   public processedText: boolean = false;
   public posData: any;
-  //public validPosTEST = ["NOUN", "VERB", "ADJ", "ADV", "PRON", "NUM", "ART", "SUBJ", "INTJ", "PREP"];
-  //public validPosTEST = ["NOUN", "VERB", "ADJ", "ADV", "PRON", "NUM", "ART", "SUBJ", "INTJ", "PREP", "ADP", "PUNCT", "PROPN", "DET", "CCONJ", "SCONJ", "AUX", "PART"];
-  //public validPos = ["AB", "DT", "HA", "HD", "HP", "HS", "IE", "IN", "JJ", "KN", "NN", "PC", "PL", "PM", "PN", "PP", "PS", "RG", "RO", "SN", "UO", "VB", "UTR", "NEU", "MAS", "UTR/NEU", "-", "SIN", "PLU", "SIN/PLU", "-", "IND", "DEF", "IND/DEF", "-", "NOM", "GEN", "SMS", "-", "POS", "KOM", "SUV", "SUB", "OBJ", "SUB/OBJ", "PRS", "PRT", "INF", "SUP", "IMP", "AKT", "SFO", "KON", "PRF", "AN", "MAD", "MID", "PAD"]
-  public validPos = ["AB", "DT", "HA", "HD", "HP", "HS", "IE", "IN", "JJ", "KN", "NN", "PC", "PL", "PM", "PN", "PP", "PS", "RG", "RO", "SN", "UO", "VB"];
+  public validPos = ["AB", "DT", "HA", "HD", "HP", "HS", "IE", "IN", "JJ", "KN", "NN", "PC", "PL", "PM", "PN", "PP", "PS", "RG", "RO", "SN", "UO", "VB", "MAD", "MID"];
+  public posLabels: {[key: string]: string} = {
+    "AB": "Adverb",
+    "DT": "Determiner",
+    "IN": "Preposition",
+    "JJ": "Adjective",
+    "KN": "Conjunction",
+    "NN": "Noun",
+    "PC": "Particle",
+    "PM": "Proper Noun",
+    "PN": "Pronoun",
+    "PP": "Personal Pronoun",
+    "PS": "Possessive Pronoun",
+    "RG": "Relative Adverb",
+    "UO": "Interjection",
+    "VB": "Verb",
+  };
+  public validLabels = this.validPos.filter(pos => this.posLabels[pos]);
+
+  
   public uniquePos: string[] = [];
   public showValidPos: boolean = false;
 
@@ -75,7 +87,7 @@ export class XgenComponent {
   totalCount: number = 0;
 
 
-  constructor(private snack: MatSnackBar, private backend: BackendService, ls: LocalizerService, private http: HttpClient,
+  constructor(private snack: MatSnackBar, public route: ActivatedRoute, private backend: BackendService, ls: LocalizerService, private http: HttpClient,
     private elem: ElementRef) {
     this.ls = ls;
   }
@@ -90,10 +102,13 @@ export class XgenComponent {
 
   ngOnInit() {
     this.loadLessons();
+    this.route.queryParams.subscribe(params => {
+      console.log(params['language']);
+      console.log(params['lessonNumber']);
+    });
   }
 
   clearForm() {
-    console.log('Clearing form data');
     this.lessonNumber = '';
     this.lessonTitle = '';
     this.textareaValue = '';
@@ -155,10 +170,7 @@ export class XgenComponent {
 
         this.waiter.off();
         this.processedText = true;
-        console.log("P", this.processedText)
-        this.next();
-        console.log("HEYY", this.posData)
-       // console.log("posdata:", this.posData, "p text: ", this.processedText);
+        this.next()
       },
       error: (error) => {
         this.snack.open("Something went wrong!", "OK", { duration: 5000 });
@@ -211,27 +223,6 @@ export class XgenComponent {
     this.showValidPos = !this.showValidPos;
   }
 
-  onEveryXChanged() {
-    console.log('Selected everyX:', this.selectedEveryX);
-  }
-
-  
-
-  shouldRenderInputBox(index: number): boolean {
-    let lastCheckedIndex = -1;
-    
-    for (let i = index - 1; i >= 0; i--) {
-      if (this.validPos.includes(this.posData[i].pos)) {
-        lastCheckedIndex = i;
-        break;
-      }
-    }
-    
-    const distance = index - lastCheckedIndex;
-    
-    // Render an input box after every Nth word
-    return distance >= this.selectedEveryX && distance % this.selectedEveryX === 0;
-  }
 
   public checkedVPos: any;
   public excludeFirstSentence = true;
@@ -250,36 +241,36 @@ export class XgenComponent {
     console.log(this.posData)
     this.checkedVPos = Object.keys(this.isChecked).filter(vPos => this.isChecked[vPos]);
     console.log(this.checkedVPos); // print the selected vPos values
+    this.waiter.on();
 
+    //this.excludeFirstSentence, this.excludeLastSentence
     this.backend.process3(this.posData, this.checkedVPos, parseInt(this.selectedEveryX), this.excludeFirstSentence, this.excludeLastSentence).subscribe({
       next: (v) => {
         this.renderedData = v;
+        console.log(this.excludeFirstSentence, this.excludeLastSentence)
+        console.log("RENDERED:", this.renderedData)
       }
     });
+
+    this.waiter.off();
     
 
     console.log(Object.keys(this.isChecked).filter(vPos => this.isChecked[vPos]))
 
-    this.isAnswerChecked = [];
 
     console.log(this.selectedEveryX);
     console.log(this.posData); // make sure the posData array contains the expected objects
 
-
-    //for (let word of this.posData) {
-    //console.log(word.accept); // check if the word object has an accept property
-    //}
   }
 
   userInput: string[] = [];
 
-  //isCorrect: boolean = false;
   public correctAnswer: string[] = [];
   public wrongAnswer: string[] = [];
-  public isCorrect: boolean = false;
+  public isCorrect: boolean[] = [];
 
 
-  isAnswerChecked: boolean[] = [];
+  public isAnswerChecked: boolean[] = [];
 
   AreAnswersChecked: boolean = false;
 
@@ -292,40 +283,70 @@ export class XgenComponent {
       if (input && (input === word.accept || (word.altAnswer && word.altAnswer.includes(input)))) {
         console.log(`This was correct: ${input}`);
         this.correctAnswer.push(input);
-        this.isCorrect = true;
+        this.isCorrect[i] = true;
         this.isAnswerChecked[i] = true;
+        console.log(this.isAnswerChecked[i])
         this.correctCount++;
         this.totalCount++;
       } else if (input !== undefined) {
         console.log(`This was wrong: ${input}`);
         this.wrongAnswer.push(input);
-        this.isAnswerChecked[i] = false;
-        this.isCorrect = false;
+        this.isAnswerChecked[i] = true;
+        console.log(this.isAnswerChecked[i])
+        this.isCorrect[i] = false;
         this.totalCount++;
       }
 
     }
+    console.log('isAnswerChecked:', this.isAnswerChecked);
     console.log(`Correct answers: ${this.correctCount} out of ${this.totalCount}`);
   }
 
+  private answersShown = false;
+
+  
   showAnswers() {
-    const gaps = this.elem.nativeElement.querySelectorAll(".gap");
-    console.log(gaps);
-    for (let i = 0; i < gaps.length; i++) {
-      const gapElement = gaps[i] as HTMLInputElement | null;
-      if (gapElement) {
-        const firstAnswer = gapElement["accept"].split(",")[0];
-        gapElement.value = firstAnswer;
-        gapElement.classList.remove("incorrect-answer");
-        const gapElementCLArray = Array.from(gapElement.classList);
-        console.log(gapElementCLArray);
-        if (!gapElementCLArray.includes("correct-answer")) {
-          gapElement.classList.add("provided-answer");
+    console.log("showing")
+    this.isAnswerChecked = [];
+    const gaps = this.elem.nativeElement.querySelectorAll('.gap');
+    if (this.answersShown) {
+      // hide the answers
+      for (let i = 0; i < gaps.length; i++) {
+        const gapElement = gaps[i] as HTMLInputElement | null;
+        if (gapElement) {
+          const id = parseInt(gapElement.id.split('-')[1]);
+          if (this.userInput[id]) {
+            gapElement.value = this.userInput[id];
+          } else {
+            gapElement.value = ''; // set empty value if userInput is not defined
+          }
+          gapElement.classList.remove('correct', 'wrong');
+          gapElement.classList.add('white-gap');
+        }
+      }
+    } else {
+      // show the answers
+      for (let i = 0; i < gaps.length; i++) {
+        const gapElement = gaps[i] as HTMLInputElement | null;
+        if (gapElement) {
+          const index = parseInt(gapElement.id.split('-')[1], 10);
+          const word = this.posData[index];
+          gapElement.value = word.accept.split(',')[0];
+          gapElement.classList.remove('wrong', 'white-gap');
+          gapElement.classList.add('correct');
         }
       }
     }
+    this.answersShown = !this.answersShown;
   }
+  
 
+public showItems = true;
+public showListItems = false;
+
+public toggleList() {
+  this.showListItems = !this.showListItems;
+}
 
   debug() {
     this.backend.process2(this.posData, true, true, 4).subscribe({
@@ -336,5 +357,25 @@ export class XgenComponent {
       complete: () => { }
     })
   }
+
+  public forceStartExercise: boolean = false;
+
+  public final_url: string = "";
+  public selectedLanguage: string = "english";
+
+  queryParams = {
+    language: 'English',
+    lessonNumber: this.lessonNumber,
+  };
+  
+
+  generateUrl(fxm: boolean) {
+    let url = "http://localhost:4200/xgen"
+    if (fxm) {
+        url += "&fxm=true";
+    }
+    this.final_url = url;
+}
+  
 
 }
