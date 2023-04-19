@@ -1,11 +1,17 @@
 {
-    "welcome-text": "Welcome to Swedish From Scratch! Choose between the following:",
+    "welcome-header": "Welcome to SwedishFromScratch!",
+    "welcome-text": "Here we have three different types of exercises that can be generated. See descriptions and examples below.",
 
     "navigation-home": "Home",
     "navigation-xgen": "Cloze gap exercise",
     "navigation-table-gen": "Table exercise",
     "navigation-gram-x": "Grammar exercises",
     "navigation-url-create": "URL",
+
+    "header-create": "Create exercise",
+    "header-check-info": "Check information",
+
+    "card-goto-exercise": "Create this exercise",
 
     "submenu-start": "Start",
     "submenu-review": "Review",
@@ -23,15 +29,34 @@
     "button-clear": "Clear",
     "button-clear-all": "Clear all",
     "button-process": "Process!",
-    "button-create-table": "Create table",
     "button-next": "Next",
     "button-back": "Back",
     "button-check-answers": "Check answers",
+    "button-create-table": "Create table",
+    "button-show-pos": "Show available POS",
+    "button-hide-pos": "Hide available POS",
+
+    "exercise-options": "Exercise options",
+    "exclude-from-exercise": "Exclude from exercise",
+    "insert-linebreak": "Insert linebreak after this",
+
+
+    "generate-x-pos": "Generate exercises for the following POS",
+    "exclude-first": "Exclude first sentence from exercise generation", 
+    "exclude-last": "Exclude last sentence from exercise generation",
+    "show-target-items": "Show target items",
+    "include-only": "Include only every",
+    "..from-xgen": "from exercise generation",
+    "every-second": "2nd",
+    "every-third": "3rd",
+    "every-fourth": "4th",
+    "every-fifth": "5th",
 
     "first-table-header": "Create inflection table exercise",
     "second-table-header": "Type in your words",
     "choose-table-content": "Choose content of exercise",
     "third-table-header": "Generated table",
+    "preview-exercise": "Preview exercise",
 
     "header-edit-review": "Edit & review table",
     "noun-table": "Noun table",
@@ -41,12 +66,16 @@
     "checkbox-random-empty": "Random empty cells",
     "checkbox-manual-choice": "Choose manually",
     "tooltip-manuel-choice": "Choose the items that will be empty for table exercises",
+
+    "tooltip-add-row": "If you're missing some words or want to add to this table, click here and a new row will appear.",
+    "tooltip-save-row": "Save this row to include it in the exercise",
     
     "table-header-word": "Word",
     "table-header-lemma": "Lemma",
     "table-header-pos": "POS",
     "table-header-msd": "MSD",
     "table-header-choose": "Choose for exercise",
+    "table-header-alt-ans": "Alternative answer",
 
 
     "general-pos-NOUN": "nouns",
@@ -79,6 +108,10 @@
 
     "lesson": "Lesson",
 
+    "exercise-link": "Here is your exercise link: ",
+    "copy-url": "Copy link",
+    "create-url": "Create link",
+
     "exercise-check-answers": "Check answers",
     "exercise-show-answers": "Show answers",
     
@@ -91,5 +124,7 @@
     "cw-down": "DOWN",
     "cw-hints": "Hints",
     "cw-check-solution": "Check solution",
-    "cw-show-solution": "Show solution"
+    "cw-show-solution": "Show solution",
+
+    "score-feedback": "You got: "
 }

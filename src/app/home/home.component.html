@@ -1,15 +1,17 @@
 <mat-toolbar color="primary" class="mat-toolbar">
     <div style="display:flex; align-items:center; height:100%;">
-    <span><a routerLink="/home">SwedishFromScratch</a></span>
-    <div style="display:flex; align-items:center; height:100%;"*ngIf="bigScreen">
-        <a mat-button routerLink="/home" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-home')}} </a>
-        <a mat-button routerLink="/xgen" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-xgen')}}
-            <span class="arrow-down"></span>
-        </a>
-        <a mat-button routerLink="/tablegen" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-table-gen')}}</a>
-        <a mat-button routerLink="/gram-x" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-gram-x')}}</a>
-        <a mat-button routerLink="/url-create" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-url-create')}}</a>
-    </div>
+        <span><a routerLink="/home">SwedishFromScratch</a></span>
+        <div style="display:flex; align-items:center; height:100%;" *ngIf="bigScreen">
+            <a mat-button routerLink="/home" routerLinkActive="active-link"
+                style="min-height:100%;">{{ls.localize('navigation-home')}} </a>
+            <a mat-button routerLink="/xgen" routerLinkActive="active-link"
+                style="min-height:100%;">{{ls.localize('navigation-xgen')}}
+            </a>
+            <a mat-button routerLink="/tablegen" routerLinkActive="active-link"
+                style="min-height:100%;">{{ls.localize('navigation-table-gen')}}</a>
+            <a mat-button routerLink="/gram-x" routerLinkActive="active-link"
+                style="min-height:100%;">{{ls.localize('navigation-gram-x')}}</a>
+        </div>
     </div>
 
 
@@ -41,7 +43,7 @@
         <div class="sidenav-content">
             <mat-list>
                 <mat-list-item>
-                    <span matListItemTitle>><b routerLink="/home">{{ls.localize('navigation-home')}}                    </b></span>
+                    <span matListItemTitle>><b routerLink="/home">{{ls.localize('navigation-home')}} </b></span>
                 </mat-list-item>
                 <mat-list-item>
                     <span matListItemTitle><b routerLink="/xgen">{{ls.localize('navigation-xgen')}}</b></span>
@@ -50,7 +52,7 @@
                 </mat-list-item>
                 <mat-list-item>
                     <span matListItemTitle><b routerLink="/tablegen">{{ls.localize('navigation-table-gen')}}
-                    </b></span>
+                        </b></span>
                     <span matListItemLine>Start</span>
                     <span>Review</span>
                 </mat-list-item>
@@ -60,7 +62,8 @@
                     <span>Review</span>
                 </mat-list-item>
                 <mat-list-item>
-                    <span matListItemTitle><b routerLink="/url-create">{{ls.localize('navigation-url-create')}}</b></span>
+                    <span matListItemTitle><b
+                            routerLink="/url-create">{{ls.localize('navigation-url-create')}}</b></span>
                 </mat-list-item>
             </mat-list>
 
@@ -72,17 +75,73 @@
     <br>
 
     <br>
-    <h1>
-        Welcome!
-    </h1>
+    <div>
+        <h1>
+            {{ls.localize("welcome-header")}}
+        </h1>
+        <p>
+            {{ls.localize("welcome-text")}}
+        </p>
+    </div>
     <br>
-    <h2>
-        <li routerLink="/home" routerLinkActive="active-link">{{ls.localize('navigation-home')}} </li>
-        <li mat-button routerLink="/xgen" routerLinkActive="active-link">{{ls.localize('navigation-xgen')}}</li>
-        <!--<a mat-button routerLink="/xgen" routerLinkActive="active-link">Placeholder</a>-->
-        <li mat-button routerLink="/gram-x" routerLinkActive="active-link">{{ls.localize('navigation-gram-x')}}</li>
-        <li mat-button routerLink="/tablegen" routerLinkActive="active-link">{{ls.localize('navigation-table-gen')}}</li>
-        <li mat-button routerLink="/url-create" routerLinkActive="active-link">{{ls.localize('navigation-url-create')}}</li>
-    </h2>
+    <div class="card-container">
+        <mat-card class="card">
+            <mat-card-header>
+                <mat-card-title>{{ls.localize('navigation-xgen')}}</mat-card-title>
+            </mat-card-header>
+            <img mat-card-image src="/assets/example-images/gap-ex.png" alt="Example screenshot of a gap exercise">
+            <mat-card-content>
+                <br>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, et
+                    efficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam.
+                    Cras dignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis
+                    volutpat turpis elementum. 
+                </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button routerLink="/xgen" mat-raised-button
+                    color="primary">{{ls.localize('card-goto-exercise')}}</button>
+            </mat-card-actions>
+        </mat-card>
+        <mat-card class="card">
+            <mat-card-header>
+                <mat-card-title>{{ls.localize('navigation-table-gen')}}</mat-card-title>
+            </mat-card-header>
+            <img mat-card-image src="/assets/example-images/table-ex.png" alt="Example screenshot of a table exercise">
+            <mat-card-content>
+                <br>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, et
+                    efficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam.
+                    Cras dignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis
+                    volutpat turpis elementum.
+                </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button routerLink="/tablegen" mat-raised-button
+                    color="primary">{{ls.localize('card-goto-exercise')}}</button>
+            </mat-card-actions>
+        </mat-card>
+        <mat-card class="card">
+            <mat-card-header>
+                <mat-card-title>{{ls.localize('navigation-gram-x')}}</mat-card-title>
+            </mat-card-header>
+            <img mat-card-image src="/assets/example-images/gram-x.png" alt="Example screenshot of a grammar exercise">
+            <mat-card-content>
+                <br>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, et
+                    efficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam.
+                    Cras dignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis
+                    volutpat turpis elementum. 
+                </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button routerLink="/gram-x" mat-raised-button 
+                    color="primary">{{ls.localize('card-goto-exercise')}}</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
 
 </mat-drawer-container>

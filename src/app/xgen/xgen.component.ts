@@ -1,11 +1,11 @@
-import { Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, ViewChild,  } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { WaiterComponent } from '../waiter/waiter.component';
 import { BackendService } from "src/backend.service";
 import { LocalizerService } from 'src/services/localizer.service';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 
 export interface Lesson {
@@ -28,15 +28,17 @@ export class XgenComponent {
 
   changeLanguage(lang: string) {
     this.ls.setLanguage(lang);
+    this.selectedLanguage = lang;
   }
   isXgenRoute = true;
+  public selectedLanguage: string = "english";
+  public xlangs: string[] = ['Swedish', 'English'];
 
   @ViewChild(WaiterComponent) waiter!: WaiterComponent;
 
-  public xlangs: string[] = ['Swedish', 'English'];
   selectedIndex = 0;
 
-  currentTab!: string;
+
   validPages: string[] = ['Home', 'Add new text', 'View all texts', 'Options', 'Preview'];
 
   isChecked: { [key: string]: boolean } = {};
@@ -47,7 +49,7 @@ export class XgenComponent {
   public processedText: boolean = false;
   public posData: any;
   public validPos = ["AB", "DT", "HA", "HD", "HP", "HS", "IE", "IN", "JJ", "KN", "NN", "PC", "PL", "PM", "PN", "PP", "PS", "RG", "RO", "SN", "UO", "VB", "MAD", "MID"];
-  public posLabels: {[key: string]: string} = {
+  public posLabels: { [key: string]: string } = {
     "AB": "Adverb",
     "DT": "Determiner",
     "IN": "Preposition",
@@ -65,7 +67,7 @@ export class XgenComponent {
   };
   public validLabels = this.validPos.filter(pos => this.posLabels[pos]);
 
-  
+
   public uniquePos: string[] = [];
   public showValidPos: boolean = false;
 
@@ -87,9 +89,20 @@ export class XgenComponent {
   totalCount: number = 0;
 
 
-  constructor(private snack: MatSnackBar, public route: ActivatedRoute, private backend: BackendService, ls: LocalizerService, private http: HttpClient,
-    private elem: ElementRef) {
+  constructor(private snack: MatSnackBar, private router: Router, public route: ActivatedRoute,
+     private backend: BackendService, ls: LocalizerService, private http: HttpClient,
+    private elem: ElementRef, private clipboard: Clipboard) {
     this.ls = ls;
+  }
+
+  bigScreen = false;
+  public onlyShowExercise = false;
+
+  checkScreenSize(): void {
+    this.bigScreen = window.innerWidth > 768;
+    window.addEventListener("resize", event => {
+      this.bigScreen = window.innerWidth > 768;
+    });
   }
 
   navigate(page: string) {
@@ -100,13 +113,74 @@ export class XgenComponent {
     }
   }
 
+
   ngOnInit() {
+    this.checkScreenSize();
+    this.route.queryParams.subscribe({
+      next: params => {
+        const encodedId = params['id'];
+        const id = decodeURIComponent(encodedId); // decode the ID using decodeURIComponent()
+        if (id === 'undefined') { // check if id is undefined
+          this.currentPageNumber = 0;
+        } else {
+          this.backend.showData(id).subscribe({
+            next: response => {
+              const data = response;
+              this.lessonNumber = data['lessonNumber'];
+              this.lessonTitle = data['lessonTitle'];
+              this.posData = data['posData'];
+              this.renderedData = data['renderedData']
+              this.onlyShowExercise = data['onlyShowExercise'];
+              if (this.lessonNumber && this.lessonTitle && this.posData && this.renderedData && this.onlyShowExercise) {
+                this.currentPageNumber = 3;
+              }
+            },
+            error: error => {
+              this.snack.open("Lesson not found", "OK", { duration: 5000 });
+            }
+          });
+        }
+      },
+      error: error => {
+        console.error(error);
+      }
+    });
     this.loadLessons();
-    this.route.queryParams.subscribe(params => {
-      console.log(params['language']);
-      console.log(params['lessonNumber']);
+  }  
+
+
+
+  public generatedUrl: string = "";
+
+
+  updateUrl(): void {
+    const data = {
+      lessonNumber: this.lessonNumber,
+      lessonTitle: this.lessonTitle,
+      posData: this.posData,
+      renderedData: this.renderedData,
+      showItems: this.showItems,
+      onlyShowExercise: true,
+      selectedLanguage: this.selectedLanguage
+
+    };
+    this.backend.storeData(data).subscribe(response => {
+      const id = response.id;
+      const data = response.data;
+      const encodedId = encodeURIComponent(id); 
+      const encodedLn = encodeURIComponent(data['lessonNumber'])
+      const encodedLt = encodeURIComponent(data['lessonTitle'])
+      const encodedLang = encodeURIComponeent(data['selectedLanguage'
+      this.generatedUrl = `http://localhost:4200/xgen?id=${encodedId}&lessonNumber=${encodedLn}&lessonTitle=${encodedLt}`;
     });
   }
+
+  copyToClipboard(): void {
+    this.clipboard.copy(this.generatedUrl);
+  }
+
+
+
 
   clearForm() {
     this.lessonNumber = '';
@@ -155,13 +229,11 @@ export class XgenComponent {
 
     this.lessonNumber = ln;
     this.lessonTitle = title;
-    console.log(this.lessonNumber, this.lessonTitle, this.textareaValue);
 
     this.waiter.on();
 
     this.backend.process(text).subscribe({
       next: (v) => {
-        console.log(this.backend)
         this.posData = v;
 
         this.posData.forEach((item: any) => {
@@ -185,7 +257,6 @@ export class XgenComponent {
 
   back() {
     this.currentPageNumber--;
-    console.log(this.currentPageNumber)
     this.correctCount = 0;
     if (this.userInput) {
       this.userInput = [];
@@ -229,38 +300,27 @@ export class XgenComponent {
   public excludeLastSentence = true;
   public sentences: any;
   lastIndex = 0;
-  
+
   renderedData: any;
 
   preview() {
     this.currentPageNumber++;
     console.log(this.altAnswer);
     this.sentences = this.textareaValue.split('.').filter(sentence => sentence.trim() !== '');
-    console.log(this.sentences);
 
-    console.log(this.posData)
     this.checkedVPos = Object.keys(this.isChecked).filter(vPos => this.isChecked[vPos]);
-    console.log(this.checkedVPos); // print the selected vPos values
     this.waiter.on();
 
     //this.excludeFirstSentence, this.excludeLastSentence
-    this.backend.process3(this.posData, this.checkedVPos, parseInt(this.selectedEveryX), this.excludeFirstSentence, this.excludeLastSentence).subscribe({
-      next: (v) => {
-        this.renderedData = v;
-        console.log(this.excludeFirstSentence, this.excludeLastSentence)
-        console.log("RENDERED:", this.renderedData)
-      }
-    });
-
+    this.backend.process3(this.posData, this.checkedVPos, parseInt(this.selectedEveryX),
+      this.excludeFirstSentence, this.excludeLastSentence).subscribe({
+        next: (v) => {
+          this.renderedData = v;
+          console.log("RENDERED:", this.renderedData)     
+        }
+      });
     this.waiter.off();
-    
-
-    console.log(Object.keys(this.isChecked).filter(vPos => this.isChecked[vPos]))
-
-
-    console.log(this.selectedEveryX);
     console.log(this.posData); // make sure the posData array contains the expected objects
-
   }
 
   userInput: string[] = [];
@@ -304,9 +364,8 @@ export class XgenComponent {
 
   private answersShown = false;
 
-  
+
   showAnswers() {
-    console.log("showing")
     this.isAnswerChecked = [];
     const gaps = this.elem.nativeElement.querySelectorAll('.gap');
     if (this.answersShown) {
@@ -339,14 +398,14 @@ export class XgenComponent {
     }
     this.answersShown = !this.answersShown;
   }
-  
 
-public showItems = true;
-public showListItems = false;
 
-public toggleList() {
-  this.showListItems = !this.showListItems;
-}
+  public showItems = true;
+  public showListItems = false;
+
+  public toggleList() {
+    this.showListItems = !this.showListItems;
+  }
 
   debug() {
     this.backend.process2(this.posData, true, true, 4).subscribe({
@@ -358,24 +417,6 @@ public toggleList() {
     })
   }
 
-  public forceStartExercise: boolean = false;
 
-  public final_url: string = "";
-  public selectedLanguage: string = "english";
-
-  queryParams = {
-    language: 'English',
-    lessonNumber: this.lessonNumber,
-  };
-  
-
-  generateUrl(fxm: boolean) {
-    let url = "http://localhost:4200/xgen"
-    if (fxm) {
-        url += "&fxm=true";
-    }
-    this.final_url = url;
-}
-  
 
 }

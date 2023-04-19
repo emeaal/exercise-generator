@@ -1,11 +1,17 @@
 {
-    "welcome-text": "Välkommen till Swedish From Scratch",
+    "welcome-header": "Välkommen till Swedish From Scratch",
+    "welcome-text": "Det finns tre sorters övningar att skapa, se nedan för att se beskrivningar och exempel.",
 
     "navigation-home": "Hem",
     "navigation-xgen": "Fyll-i-luckan",
     "navigation-table-gen": "Böjningstabeller",
     "navigation-gram-x": "Grammatikövningar",
     "navigation-url-create": "URL",
+
+    "header-create": "Skapa övning",
+    "header-check-info": "Kontrollera information",
+
+    "card-goto-exercise": "Skapa övning",
 
     "submenu-start": "Start",
     "submenu-review": "Granska",
@@ -27,6 +33,24 @@
     "button-back": "Tillbaka",
     "button-check-answers": "Kontrollera svar",
     "button-create-table": "Skapa tabell",
+    "button-show-pos": "Visa tillgängliga ordklasser",
+    "button-hide-pos": "Göm tillgängliga ordklasser",
+
+    "exercise-options": "Övningsalternativ",
+    "exclude-from-exercise": "Ha inte med i övning",
+    "insert-linebreak": "Infoga radbrytning efter",
+
+    "generate-x-pos": "Skapa övningar för följande ordklasser",
+    "exclude-first": "Exkludera första meningen från övningen", 
+    "exclude-last": "Exkludera sista meningen från övningen",
+    "show-target-items": "Visa svar som hjälp",
+    "include-only": "Ha endast med",
+    "..from-xgen": "från att bli övning",
+    "every-second": "vartannat",
+    "every-third": "var 3e",
+    "every-fourth": "var 4e",
+    "every-fifth": "var 5e",
+
 
     "first-table-header": "Skapa övningar med böjningstabeller",
     "second-table-header": "Skriv in dina ord",
@@ -41,12 +65,15 @@
     "checkbox-random-empty": "Slumpmässigt tomma celler",
     "checkbox-manual-choice": "Välj egna tomma celler",
     "tooltip-manuel-choice": "Välj själv de celler som ska vara tomma i övningen",
+    "tooltip-add-row": "Du kan lägga till ord du saknar genom att klicka här",
+    "tooltip-save-row": "Tryck här för att spara denna rad så den kommer med i övningen",
     
     "table-header-word": "Ord",
     "table-header-lemma": "Lemma",
     "table-header-pos": "Ordklass",
     "table-header-msd": "MSD",
     "table-header-choose": "Välj för övning",
+    "table-header-alt-ans": "Alternativa svar",
 
     "general-pos-NOUN": "substantiv",
     "general-pos-VERB": "verb",
@@ -77,6 +104,9 @@
     "language-selection-ukrainian": "Ukrainska",
 
     "lesson": "Lektion",
+    "exercise-link": "Här är din länk till övningen: ",
+    "copy-url": "Kopiera länk",
+    "create-url": "Skapa länk",
 
     "exercise-check-answers": "Kontrollera svaren",
     "exercise-show-answers": "Visa svaren",

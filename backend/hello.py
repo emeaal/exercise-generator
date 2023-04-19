@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 import json
 import xgen
+import time
 
 app = Flask(__name__)
 
@@ -47,9 +48,17 @@ def process3():
     json_obj = request.args.get("json", default="", type=str)
     chosen_pos = request.args.get("chosenVpos", default="", type=str)
     selectedEveryX = request.args.get("everyx", type=int)
-    excludeFirstSentence = request.args.get("excludeFirstSentence", default=False, type=bool)
-    excludeLastSentence = request.args.get("excludeLastSentence", default=False, type=bool)
+    excludeFirstSentence = request.args.get("excludeFirstSentence", default="False", type=str)
+    excludeLastSentence = request.args.get("excludeLastSentence", default="False", type=str)
     print("Recevied data")
+    if excludeFirstSentence.lower() == "true":
+        excludeFirstSentence = True
+    else:
+        excludeFirstSentence = False
+    if excludeLastSentence.lower() == "true":
+        excludeLastSentence = True
+    else:
+        excludeLastSentence = False
     return cors_response(xgen.process3(json_obj, chosen_pos, selectedEveryX, excludeFirstSentence, excludeLastSentence))
 
 @app.route("/identify")
@@ -68,6 +77,29 @@ def process2():
     everyx = request.args.get("everyx", type=int)
     json_obj = json.loads(json_string)
     return cors_response(xgen.process2(json_obj, exclude_first, exclude_last, everyx))
+
+
+dataStore = {}
+
+@app.route('/storeData', methods=['POST'])
+def store_data():
+    data = request.json
+    id = str(time.time())
+    dataStore[id] = data
+    print("the stored data:", dataStore)
+    return jsonify({"id": id, "data": data})
+
+
+@app.route('/showData')
+def show_data():
+    print("show data called")
+    id = request.args.get('id')
+    data = dataStore.get(id)
+    print("showing data: ", data)
+    if data is None:
+        return 'Data not found', 404
+    else:
+        return jsonify(data)
 
 
 @app.after_request

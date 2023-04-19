@@ -1,16 +1,14 @@
 <mat-toolbar color="primary">
   <div style="display:flex; align-items:center; height:100%;">
     <span><a routerLink="/home">SwedishFromScratch</a></span>
-    <a mat-button routerLink="/home" routerLinkActive="active-link" style="min-height:100%;">Home</a>
-    <a mat-button routerLink="/xgen" routerLinkActive="active-link" style="min-height:100%;">Create lesson
-      <span class="arrow-down"></span>
+    <a mat-button routerLink="/home" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-home')}}</a>
+    <a mat-button routerLink="/xgen" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-xgen')}}
     </a>
-    <a mat-button routerLink="/tablegen" routerLinkActive="active-link" style="min-height:100%;">Generate tables</a>
-    <a mat-button routerLink="/gram-x" routerLinkActive="active-link" style="min-height:100%;">Grammar</a>
-    <a mat-button routerLink="/url-create" routerLinkActive="active-link" style="min-height:100%;">URL</a>
+    <a mat-button routerLink="/tablegen" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-table-gen')}}</a>
+    <a mat-button routerLink="/gram-x" routerLinkActive="active-link" style="min-height:100%;">{{ls.localize('navigation-gram-x')}}</a>
   </div>
 
-  
+
 
 
   <div style="float:right">
@@ -26,12 +24,12 @@
 
 </mat-toolbar>
 
-<div class="submenu" *ngIf="isTablegenRoute">
+<div class="submenu" *ngIf="isTablegenRoute && !onlyShowExercise">
   <div class="spacer2"></div>
-  <a mat-button (click)="currentPageNumber = 0" [class.active-link]="currentPageNumber === 0">Start</a>
-  <a mat-button (click)="currentPageNumber = 1" [class.active-link]="currentPageNumber === 1">Review</a>
-  <a mat-button (click)="currentPageNumber = 2" [class.active-link]="currentPageNumber === 2">Exercise options</a>
-  <a mat-button (click)="currentPageNumber = 3" [class.active-link]="currentPageNumber === 3">View lesson</a>
+  <a mat-button (click)="currentPageNumber = 0" [class.active-link]="currentPageNumber === 0">{{ls.localize('submenu-start')}}</a>
+  <a mat-button (click)="currentPageNumber = 1" [class.active-link]="currentPageNumber === 1">{{ls.localize('submenu-review')}}</a>
+  <a mat-button (click)="currentPageNumber = 2" [class.active-link]="currentPageNumber === 2">{{ls.localize('submenu-options')}}</a>
+  <a mat-button (click)="currentPageNumber = 3" [class.active-link]="currentPageNumber === 3">{{ls.localize('submenu-view-lesson')}}</a>
   <!-- <a mat-button (click)="currentPageNumber = 3" [class.active-link]="currentPageNumber === 3">View lesson</a>-->
 </div>
 
@@ -39,38 +37,6 @@
 
 
 <div class="table-container">
-  <!--<div *ngIf="currentPageNumber==0">
-
-    <table>
-      <th>
-      <td><mat-form-field><input matInput type="text" [(ngModel)]="word"></mat-form-field></td>
-    </table>
-    <button mat-button mat-raised-button color="primary" (click)="create_table()">Create table</button>
-
-
-    <table *ngIf="msdWords" class="table">
-      <tbody>
-        <tr>
-          <td></td>
-          <ng-container *ngFor="let entry of msdWords | keyvalue">
-            <td>{{ entry.key }}</td>
-          </ng-container>
-        </tr>
-        <tr>
-          <td>Forms</td>
-          <ng-container *ngFor="let entry of msdWords | keyvalue">
-            <td>
-              <mat-form-field class="table-field">
-                <input matInput type="text" [(ngModel)]="entry.value" [ngModelOptions]="{standalone: true}"
-                  class="input-field">
-              </mat-form-field>
-            </td>
-          </ng-container>
-        </tr>
-      </tbody>
-    </table>
-
-  </div>-->
 
   <div *ngIf="currentPageNumber==0">
 
@@ -103,20 +69,26 @@
     <br> <br>
     <button mat-button mat-raised-button color="warn" (click)="clearAll()">{{ls.localize('button-clear-all')}}</button>
     &nbsp;&nbsp;&nbsp;
-    <button mat-button mat-raised-button color="primary" (click)="create_big_table()">{{ls.localize('button-create-table')}}</button>
+    <button mat-button mat-raised-button color="primary"
+      (click)="create_big_table()">{{ls.localize('button-create-table')}}</button>
 
 
   </div>
   <div *ngIf="currentPageNumber==1 && tableData">
     <h3>{{ls.localize('header-edit-review')}}</h3>
 
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, et efficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam. Cras dignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis volutpat turpis elementum.</p>
+
     <div *ngFor="let table of tableData">
       <h3>{{ table.wordClass }} table</h3>
       <table>
         <thead>
           <tr>
-            <ng-container *ngFor="let header of table.headers">
+            <ng-container *ngFor="let header of table.headers; let i = index">
               <th>{{ header }}</th>
+              <th *ngIf="add_manual_rows && i === table.headers.length - 1">
+                <button mat-raised-button color="primary" matTooltip="{{ls.localize('tooltip-add-row')}}"(click)="addNewRow(table)">Add to this table</button>
+              </th>
             </ng-container>
           </tr>
         </thead>
@@ -131,10 +103,22 @@
               </td>
             </ng-container>
           </tr>
+          <tr *ngIf="add_manual_rows">
+            <ng-container *ngFor="let header of table.headers">
+              <td>
+                <div *ngIf="add_new_row" class="table-cell">
+                  <input matInput type="text" class="table-text" [(ngModel)]="newRow[header]"
+                    [ngModelOptions]="{updateOn: 'blur'}">
+                </div>
+              </td>
+            </ng-container>
+            <td>
+              <button *ngIf="show_save_button" mat-raised-button color="accent" matTooltip="{{ls.localize('tooltip-save-row')}}" (click)="saveNewRow(table)">Save added row</button>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
-
 
 
     <button mat-button mat-raised-button color="primary" (click)="back()">
@@ -149,6 +133,8 @@
   <div *ngIf="currentPageNumber==2">
 
     <h3>{{ls.localize('choose-table-content')}}</h3>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, et efficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam. Cras dignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis volutpat turpis elementum.</p>
 
     <div *ngFor="let choice of exerciseChoices">
       <mat-checkbox [(ngModel)]="isChecked[choice]" [value]="choice">{{choice}}</mat-checkbox>
@@ -197,7 +183,7 @@
 
   <div *ngIf="currentPageNumber==3">
     <h3>{{ls.localize('third-table-header')}}</h3>
-    <div *ngFor="let table of generatedTable">
+    <div *ngFor="let table of generatedTable; let i = index">
       <h3>{{ table.wordClass }} table</h3>
       <table>
         <thead>
@@ -208,28 +194,45 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of table.rows; let i = index">
-            <ng-container *ngFor="let value of row.values; let j = index">
+          <tr *ngFor="let row of table.rows; let j = index">
+            <ng-container *ngFor="let value of row.values; let k = index">
               <td>
-                <div class="table-cell">
-                  <input type="text" class="table-text"
-                    [ngClass]="{'correct': isAnswerChecked && isCorrect[j], 'incorrect': isAnswerChecked && !isCorrect[i],'white-gap': !isAnswerChecked}"
-                    [ngModel]="value" #input (ngModelChange)="row.values[j]=$event"
-                    [ngModelOptions]="{updateOn: 'blur'}" autocomplete="off">
-                </div>
+                <div class="table-cell table-cell-{{i}}-{{j}}"
+                [ngClass]="{'white-gap': !isCellFilled[i][j], 'correct': isCorrect[i][j] && isCellFilled[i][j], 'incorrect': !isCorrect[i][j] && isCellFilled[i][j]}">
+                <input type="text" class="table-text"
+                  [(ngModel)]="table.rows[j].values[k]" #input
+                  [ngModelOptions]="{updateOn: 'blur'}" autocomplete="off">
+              </div>                           
               </td>
             </ng-container>
           </tr>
         </tbody>
       </table>
     </div>
+    
     <br>
 
-    <button mat-button mat-raised-button color="primary" (click)="back_to_tables()">{{ls.localize('button-back')}}</button>
+    <div *ngIf="!onlyShowExercise">
+    <button mat-button mat-raised-button color="primary"
+      (click)="back_to_tables()">{{ls.localize('button-back')}}</button>
+    </div>
     &nbsp;&nbsp;&nbsp;
     <button mat-button mat-raised-button (click)="checkAnswers()"
       color="primary">{{ls.localize('exercise-check-answers')}}</button>
-    <!-- <p> Your answer: {{userValue}}, Correct answer: {{expectedValue}}</p> -->
+
+      <br /><br />
+      <div *ngIf="!onlyShowExercise">
+          <button mat-button mat-raised-button color="primary" (click)="updateUrl()">{{ls.localize('create-url')}}</button>
+          <br /><br />
+          <div *ngIf="generatedUrl">
+              {{ls.localize('exercise-link')}}
+            <button mat-button (click)="copyToClipboard()" color="primary">
+              <mat-icon>file_copy</mat-icon> {{ls.localize('copy-url')}}
+            </button> 
+            <br />                 
+            <span class="url-span">{{generatedUrl}}</span>
+          </div>
+        </div>  
 
 
   </div>

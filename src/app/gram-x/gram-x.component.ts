@@ -1,10 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { LocalizerService } from 'src/services/localizer.service';
 import { BackendService } from 'src/backend.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WaiterComponent } from '../waiter/waiter.component';
 import { HttpClient } from '@angular/common/http';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 
 export interface Lesson {
@@ -44,6 +45,7 @@ export class GramXComponent {
 
   showToggle = false;
   bigScreen = false;
+  public onlyShowExercise = false;
 
   panelOpenState = false;
   public drawer: any;
@@ -59,12 +61,15 @@ export class GramXComponent {
     this.ls.setLanguage(lang);
   }
 
-  constructor(private router: Router, private route: ActivatedRoute, private snack: MatSnackBar, ls: LocalizerService, private backend: BackendService, private http: HttpClient) {
+  constructor(private router: Router, private route: ActivatedRoute, private elem: ElementRef, private snack: MatSnackBar, ls: LocalizerService, private backend: BackendService, private http: HttpClient, private clipboard: Clipboard) {
     this.ls = ls;
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         console.log(this.router.url);
         this.isGramXRoute = (this.router.url.startsWith('/gram-x'));
+        this.lessonTitle = "";
+        this.lessonNumber = "";
+        this.onlyShowExercise = false;
       }
     });
   }
@@ -80,62 +85,101 @@ export class GramXComponent {
   }
 
   ngOnInit() {
+    this.checkScreenSize();
     this.route.queryParams.subscribe(params => {
-      console.log(params);
-      if (params["lessonNumber"]) {
-        this.lessonNumber = params["lessonNumber"].toString();
-      }
-      if (params["lessonTitle"]) {
-        this.lessonTitle = params["lessonTitle"];
-      }
-      if (params["posData"]) {
-        this.posData = JSON.parse(params["posData"]);
-      }
-      if (params["isChosen"]) {
-        this.isChosen = JSON.parse(params["isChosen"]);
-      }
-      if (params["isCorrect"]) {
-        this.isCorrect = JSON.parse(params["isCorrect"]);
-      }
-      if (params["selectedLemmas"]) {
-        this.selectedLemmas = JSON.parse(params["selectedLemmas"]);
-      }
-      // Check if all required parameters are present
-      if (this.lessonNumber && this.lessonTitle && this.posData && this.isChosen && this.isCorrect && this.selectedLemmas) {
-        this.currentPageNumber = 2;
-      } else {
+      const encodedId = params['id'];
+      const id = decodeURIComponent(encodedId); // decode the ID using decodeURIComponent()
+      if (id === 'undefined') { // check if id is undefined
         this.currentPageNumber = 0;
+      } else {
+        this.backend.showData(id).subscribe(
+          response => {
+            const data = response;
+            this.lessonNumber = data['lessonNumber'];
+            this.lessonTitle = data['lessonTitle'];
+            this.posData = data['posData'];
+            this.isChosen = data['isChosen'];
+            this.onlyShowExercise = data['onlyShowExercise'];
+            if (this.lessonNumber && this.lessonTitle && this.posData && this.selectedLemmas && this.onlyShowExercise) {
+              this.currentPageNumber = 2;
+            }
+          },
+          error => {
+            this.snack.open("Lesson not found", "OK", { duration: 5000 });
+          }
+        );
       }
     });
     this.loadLessons();
-    this.checkScreenSize();
-  
-    // subscribe to NavigationEnd event of the Router
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.checkScreenSize();
+  }
+
+
+
+  public generatedUrl: string = "";
+
+
+  updateUrl(): void {
+    const data = {
+      lessonNumber: this.lessonNumber,
+      lessonTitle: this.lessonTitle,
+      posData: this.posData,
+      selectedLemmas: this.selectedLemmas,
+      isChosen: this.isChosen,
+      onlyShowExercise: true,
+    };
+    this.backend.storeData(data).subscribe(response => {
+      const id = response.id;
+      const data = response.data;
+      const encodedId = encodeURIComponent(id); // encode the ID using encodeURIComponent()
+      const encodedLn = encodeURIComponent(data['lessonNumber'])
+      const encodedLt = encodeURIComponent(data['lessonTitle'])
+      this.generatedUrl = `http://localhost:4200/gram-x?id=${encodedId}&lessonNumber=${encodedLn}&lessonTitle=${encodedLt}`;
+    });
+  }
+
+  copyToClipboard(): void {
+    this.clipboard.copy(this.generatedUrl);
+  }
+
+  selectedLemmas: string[] = [];
+  isChosen: { [key: string]: boolean } = {};
+
+
+  make_grammar_ex(ln: string, title: string, text: string) {
+    if (!ln || !title || !text) {
+      this.snack.open("Please fill out all fields!", "OK", { duration: 5000 });
+      return;
+    }
+
+    this.lessonNumber = ln;
+    this.lessonTitle = title;
+
+    this.waiter.on();
+
+    this.backend.make_grammar_ex(text).subscribe({
+      next: (v) => {
+        this.posData = v;
+
+        this.waiter.off();
+        this.processedText = true;
+        console.log("P", this.processedText)
+        this.selectedLemmas = this.posData.filter((obj: { checked: any; }) => obj.checked).map((obj: { lemma: any; }) => obj.lemma);
+        this.next();
+      },
+      error: (error) => {
+        this.snack.open("Something went wrong!", "OK", { duration: 5000 });
       }
     });
   }
-  
 
-  updateUrl(): void {
-    const queryParams = {
-      lessonNumber: this.lessonNumber.toString(),
-      lessonTitle: this.lessonTitle,
-      posData: JSON.stringify(this.posData),
-      isChosen: JSON.stringify(this.isChosen),
-      isCorrect: JSON.stringify(this.isCorrect),
-      selectedLemmas: JSON.stringify(this.selectedLemmas),
-    };
-    this.router.navigate([], { queryParams, queryParamsHandling: 'merge' });
-    console.log("Updated URL: " + window.location.href);
+  next() {
+    this.currentPageNumber++;
+    this.currentPage = this.validPages[this.currentPageNumber];
   }
-  
-  
+
+
 
   clearForm() {
-    console.log('Clearing form data');
     this.lessonNumber = '';
     this.lessonTitle = '';
     this.textareaValue = '';
@@ -175,138 +219,48 @@ export class GramXComponent {
   public isCorrect: boolean[] = [];
   userInput: string[] = [];
   public isAnswerChecked: boolean[] = [];
+  correctCount: number = 0;
+  totalCount: number = 0;
 
   checkAnswers() {
-    console.log("checking answers")
+    this.correctCount = 0;
+    this.totalCount = 0;
     this.isCorrect = [];
     for (let i = 0; i < this.posData.length; i++) {
       const word = this.posData[i];
       if (this.isChosen[word.lemma]) {
         const input = this.userInput[i];
+        const inputIndex = this.userInput.indexOf(input);
+
+        const wordsBefore = this.posData.slice(Math.max(0, inputIndex - 2), inputIndex);
+        const wordsAfter = this.posData.slice(inputIndex + 1, inputIndex + 3);
+
+        console.log(wordsBefore, input, wordsAfter);
         if (input == word.text) {
           this.isCorrect[i] = true
-          this.isAnswerChecked[i] = true;
+          this.correctCount++;
+          this.totalCount++;
+        } else if (input !== undefined) {
+          this.isCorrect[i] = false
+          this.totalCount++;
         }
-        else if (input !== undefined)
-        this.isCorrect[i] = false
-        this.isAnswerChecked[i] = true;
-      }
-    }
-    console.log("Updated URL: " + window.location.href);
-  }
-  
-  
-  
-  
-  selectedLemmas: string[] = [];
-  isChosen: { [key: string]: boolean } = {};
-
-
-  make_grammar_ex(ln: string, title: string, text: string) {
-    if (!ln || !title || !text) {
-      this.snack.open("Please fill out all fields!", "OK", { duration: 5000 });
-      return;
-    }
-
-    this.lessonNumber = ln;
-    this.lessonTitle = title;
-    console.log(this.lessonNumber, this.lessonTitle, this.textareaValue);
-
-    this.waiter.on();
-
-    this.backend.make_grammar_ex(text).subscribe({
-      next: (v) => {
-        console.log(this.backend)
-        this.posData = v;
-
-        this.waiter.off();
-        this.processedText = true;
-        console.log("P", this.processedText)
-        this.next();
-        console.log("HEYY", this.posData)
-        this.selectedLemmas = this.posData.filter((obj: { checked: any; }) => obj.checked).map((obj: { lemma: any; }) => obj.lemma);
-      },
-      error: (error) => {
-        this.snack.open("Something went wrong!", "OK", { duration: 5000 });
-      }
-    });
-    console.log("Updated URL: " + window.location.href);
-  }
-
-  checkAgreement(list1: string[], list2: string[]): void {
-    for (const word of list1) {
-      if (word.includes("+")) {
-        const parts = word.split("+");
-        if (list2.includes(parts[0]) || list2.includes(parts[1])) {
-          continue;
-        } else {
-          console.log("incorrect");
-          return;
+        this.isAnswerChecked[i] = !this.isAnswerChecked[i]; // toggle the checked state
+        const gapElement = this.elem.nativeElement.querySelector(`#gap-${i}`);
+        if (gapElement) {
+          if (this.isAnswerChecked[i]) {
+            gapElement.classList.remove('white-gap');
+            gapElement.classList.add(this.isCorrect[i] ? 'correct' : 'incorrect');
+          } else {
+            gapElement.classList.remove('correct', 'incorrect');
+            gapElement.classList.add('white-gap');
+          }
         }
-      } else if (list2.includes(word)) {
-        continue;
-      } else {
-        console.log("incorrect");
-        return;
       }
     }
-  
-    for (const word of list2) {
-      if (word.includes("+")) {
-        const parts = word.split("+");
-        if (list1.includes(parts[0]) || list1.includes(parts[1])) {
-          continue;
-        } else {
-          console.log("incorrect");
-          return;
-        }
-      } else if (list1.includes(word)) {
-        continue;
-      } else {
-        console.log("incorrect");
-        return;
-      }
-    }
-  
-    console.log("correct");
-  }
-
-
-
-  check_grammar(ln: string, title: string, text: string) {
-    if (!ln || !title || !text) {
-      this.snack.open("Please fill out all fields!", "OK", { duration: 5000 });
-      return;
-    }
-
-    this.lessonNumber = ln;
-    this.lessonTitle = title;
-    console.log(this.lessonNumber, this.lessonTitle, this.textareaValue);
-
-    this.waiter.on();
-
-    this.backend.process_grammar_data(text).subscribe({
-      next: (v) => {
-        this.posData = v;
-        console.log(this.posData)
-      },
-      error: (error) => {
-        this.snack.open("Something went wrong!", "OK", { duration: 5000 });
-      }
-    });
-  }
-
-
-
-  next() {
-    this.currentPageNumber++;
-    this.updateUrl();
-    console.log("Updated URL: " + window.location.href);
   }
 
   back() {
     this.currentPageNumber--;
-    console.log(this.currentPageNumber)
     for (let i = 0; i < this.posData.length; i++) {
       this.isAnswerChecked[i] = false;
     }

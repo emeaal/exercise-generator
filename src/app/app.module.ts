@@ -23,12 +23,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatListModule} from '@angular/material/list';
+import {MatCardModule} from '@angular/material/card';
 
 
 import { XgenComponent } from './xgen/xgen.component';
 import { HomeComponent } from './home/home.component';
 import { TablegenComponent } from './tablegen/tablegen.component';
-import { UrlCreateComponent } from './url-create/url-create.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -41,7 +41,6 @@ import { GramXComponent } from './gram-x/gram-x.component';
     XgenComponent,
     HomeComponent,
     TablegenComponent,
-    UrlCreateComponent,
     WaiterComponent,
     GramXComponent,
     ],
@@ -67,7 +66,8 @@ import { GramXComponent } from './gram-x/gram-x.component';
     MatTableModule,
     MatPaginatorModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatCardModule,
   ],
   providers: [MatSnackBar,
     LocalizerService],

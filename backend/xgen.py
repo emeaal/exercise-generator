@@ -11,7 +11,6 @@ def process(text):
 
     root = ET.fromstring(xml_data)
 
-    # iterate over the 'sentence' elements
     sentences = []
     sent_id = 0
     for sentence_elem in root.iter('sentence'):
@@ -25,13 +24,10 @@ def process(text):
                 'lemma': word_elem.get('lemma').strip('|'),
                 'pos': word_elem.get('pos'),
             }
-            #print(word)
             sentence.append(word)
         sentences.extend(sentence)
         sent_id += 1
 
-    # return the resulting list of sentences
-    print(sentences)
     return sentences
 
 
@@ -39,15 +35,11 @@ def process3(json_obj, chosen_pos, selectedEveryX, excludeFirstSentence,
              excludeLastSentence):
     gaps = []
     distance_to_prev_gap = 0
-    print("every x:", selectedEveryX)
-    print(chosen_pos)
-    print(excludeFirstSentence, excludeLastSentence)
     prev_pos = None
     json_obj = json.loads(json_obj)
 
     chosen_pos_list = chosen_pos.split(',')
     last_sent_id = max([line['sent_id'] for line in json_obj])
-    print(type(chosen_pos))
 
     for i, line in enumerate(json_obj):
         if excludeFirstSentence == True and line['sent_id'] == 0:
@@ -68,8 +60,6 @@ def process3(json_obj, chosen_pos, selectedEveryX, excludeFirstSentence,
                     distance_to_prev_gap += 1
 
         prev_pos = line['pos']
-
-    print(gaps)
     return gaps
 
 
@@ -133,6 +123,7 @@ def create_table(words):
     nouns = {}
     verbs = {}
     adj = {}
+    not_valid_word = {}
 
     for word in words.split(","):
         lemma = word.lower().strip()
@@ -149,7 +140,6 @@ def create_table(words):
             continue
 
         data = response.json()
-        print(data)
         word_forms = data["hits"]["hits"][0]["_source"]["WordForms"]
         pos = data["hits"]["hits"][0]["_source"]["FormRepresentations"][0][
             "partOfSpeech"]
@@ -181,10 +171,18 @@ def create_table(words):
                 "wordClass": "adjective",
                 "inflections": adj_table
             }
+        else:
+            not_valid_word[lemma] = {
+                "word": lemma,
+                "wordClass": "None",
+                "inflections": "None"
+    }
+
+        
 
     msd_word_list = [nouns[word]
                      for word in nouns] + [verbs[word] for word in verbs
-                                           ] + [adj[word] for word in adj]
+                                           ] + [adj[word] for word in adj] + [not_valid_word[word] for word in not_valid_word]
     print(msd_word_list)
     return msd_word_list
 
@@ -261,12 +259,10 @@ def make_grammar_ex(text):
                 'dephead': word_elem.get('dephead'),
                 'deprel': word_elem.get('deprel')
             }
-            #print(word)
             sentence.append(word)
         sentences.extend(sentence)
         sent_id += 1
 
-    # return the resulting list of sentences
     print(sentences)
     return sentences
 
