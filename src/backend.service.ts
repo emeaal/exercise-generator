@@ -34,7 +34,6 @@ export class BackendService {
     }
 
     process3(jsonString: string, chosenVpos: string, selectedEveryX: number, excludeFirstSentence: boolean, excludeLastSentence: boolean) {
-        console.log("testing...", excludeFirstSentence, excludeLastSentence)
         const url = this.backendUrl + "process3?json=" + encodeURIComponent(JSON.stringify(jsonString)) + "&chosenVpos=" + chosenVpos + "&everyx=" + selectedEveryX + "&excludeFirstSentence=" + excludeFirstSentence + "&excludeLastSentence=" + excludeLastSentence;
         return this.http.get(url);
     }

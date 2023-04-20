@@ -183,7 +183,7 @@ def create_table(words):
     msd_word_list = [nouns[word]
                      for word in nouns] + [verbs[word] for word in verbs
                                            ] + [adj[word] for word in adj] + [not_valid_word[word] for word in not_valid_word]
-    print(msd_word_list)
+    
     return msd_word_list
 
 
@@ -263,7 +263,6 @@ def make_grammar_ex(text):
         sentences.extend(sentence)
         sent_id += 1
 
-    print(sentences)
     return sentences
 
 
@@ -291,12 +290,9 @@ def process_grammar_data(data):
             if item['deprel'] == 'DT':
                 msd_head = msd_head[:3]
             text = item['text']
-            print(text)
             result = check_agreement(msd_word, msd_head)
             processed_dict[text] = result
         else:
             text = item['text']
             processed_dict[text] = "correct"
-            print(text)
-    print(processed_dict)
     return processed_dict

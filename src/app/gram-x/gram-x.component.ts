@@ -27,6 +27,7 @@ export class GramXComponent {
   isGramXRoute = true;
   public currentPageNumber: number = 0;
   public currentPage: string = "add";
+  validPages: string[] = ['Start', 'Review', 'Exercise options', 'View lesson'];
 
 
   public lessonNumber: string = "";
@@ -41,7 +42,8 @@ export class GramXComponent {
   public processedText: boolean = false;
   lemma: any;
 
-  isSmallScreen = false;
+  selectedLemmas: string[] = [];
+  isChosen: { [key: string]: boolean } = {};
 
   showToggle = false;
   bigScreen = false;
@@ -49,6 +51,14 @@ export class GramXComponent {
 
   panelOpenState = false;
   public drawer: any;
+
+  public isCorrect: boolean[] = [];
+  userInput: string[] = [];
+  public isAnswerChecked: boolean[] = [];
+  correctCount: number = 0;
+  totalCount: number = 0;
+
+  public generatedUrl: string = "";
 
   checkScreenSize(): void {
     this.bigScreen = window.innerWidth > 768;
@@ -60,6 +70,7 @@ export class GramXComponent {
   changeLanguage(lang: string) {
     this.ls.setLanguage(lang);
   }
+  public selectedLanguage: string = "english";
 
   constructor(private router: Router, private route: ActivatedRoute, private elem: ElementRef, private snack: MatSnackBar, ls: LocalizerService, private backend: BackendService, private http: HttpClient, private clipboard: Clipboard) {
     this.ls = ls;
@@ -74,7 +85,6 @@ export class GramXComponent {
     });
   }
 
-  validPages: string[] = ['Start', 'Review', 'Exercise options', 'View lesson'];
 
   navigate(page: string) {
     if (this.validPages.includes(page)) {
@@ -88,13 +98,14 @@ export class GramXComponent {
     this.checkScreenSize();
     this.route.queryParams.subscribe(params => {
       const encodedId = params['id'];
-      const id = decodeURIComponent(encodedId); // decode the ID using decodeURIComponent()
-      if (id === 'undefined') { // check if id is undefined
+      const id = decodeURIComponent(encodedId);
+      if (id === 'undefined') { 
         this.currentPageNumber = 0;
       } else {
         this.backend.showData(id).subscribe(
           response => {
             const data = response;
+            this.selectedLanguage = data['selectedLanguage'];
             this.lessonNumber = data['lessonNumber'];
             this.lessonTitle = data['lessonTitle'];
             this.posData = data['posData'];
@@ -102,6 +113,7 @@ export class GramXComponent {
             this.onlyShowExercise = data['onlyShowExercise'];
             if (this.lessonNumber && this.lessonTitle && this.posData && this.selectedLemmas && this.onlyShowExercise) {
               this.currentPageNumber = 2;
+              this.ls.setLanguage(this.selectedLanguage);
             }
           },
           error => {
@@ -112,10 +124,6 @@ export class GramXComponent {
     });
     this.loadLessons();
   }
-
-
-
-  public generatedUrl: string = "";
 
 
   updateUrl(): void {
@@ -130,19 +138,18 @@ export class GramXComponent {
     this.backend.storeData(data).subscribe(response => {
       const id = response.id;
       const data = response.data;
-      const encodedId = encodeURIComponent(id); // encode the ID using encodeURIComponent()
+      const encodedId = encodeURIComponent(id);
       const encodedLn = encodeURIComponent(data['lessonNumber'])
       const encodedLt = encodeURIComponent(data['lessonTitle'])
-      this.generatedUrl = `http://localhost:4200/gram-x?id=${encodedId}&lessonNumber=${encodedLn}&lessonTitle=${encodedLt}`;
+      const encodedLang = encodeURIComponent(data['selectedLanguage'])
+      //this.generatedUrl = https://spraakbanken.gu.se/larkalabb/sfs/gram-x?id=${encodedId}&lessonNumber=${encodedLn}&lessonTitle=${encodedLt}&selectedLanguage=${encodedLang}`;
+      this.generatedUrl = `http://localhost:4200/gram-x?id=${encodedId}&lessonNumber=${encodedLn}&lessonTitle=${encodedLt}&selectedLanguage=${encodedLang}`;
     });
   }
 
   copyToClipboard(): void {
     this.clipboard.copy(this.generatedUrl);
   }
-
-  selectedLemmas: string[] = [];
-  isChosen: { [key: string]: boolean } = {};
 
 
   make_grammar_ex(ln: string, title: string, text: string) {
@@ -162,7 +169,6 @@ export class GramXComponent {
 
         this.waiter.off();
         this.processedText = true;
-        console.log("P", this.processedText)
         this.selectedLemmas = this.posData.filter((obj: { checked: any; }) => obj.checked).map((obj: { lemma: any; }) => obj.lemma);
         this.next();
       },
@@ -172,19 +178,23 @@ export class GramXComponent {
     });
   }
 
+  back() {
+    this.currentPageNumber--;
+    for (let i = 0; i < this.posData.length; i++) {
+      this.isAnswerChecked[i] = false;
+    }
+  }
+
   next() {
     this.currentPageNumber++;
     this.currentPage = this.validPages[this.currentPageNumber];
   }
-
-
 
   clearForm() {
     this.lessonNumber = '';
     this.lessonTitle = '';
     this.textareaValue = '';
     this.posData = '';
-    console.log(this.posData.altAnswer)
     if (this.posData.altAnswer) {
       this.posData.altAnswer = [];
     }
@@ -215,12 +225,6 @@ export class GramXComponent {
     }
   }
 
-
-  public isCorrect: boolean[] = [];
-  userInput: string[] = [];
-  public isAnswerChecked: boolean[] = [];
-  correctCount: number = 0;
-  totalCount: number = 0;
 
   checkAnswers() {
     this.correctCount = 0;
@@ -259,11 +263,5 @@ export class GramXComponent {
     }
   }
 
-  back() {
-    this.currentPageNumber--;
-    for (let i = 0; i < this.posData.length; i++) {
-      this.isAnswerChecked[i] = false;
-    }
-  }
 
 }

@@ -15,12 +15,7 @@ import { HttpClient } from '@angular/common/http';
 export class TablegenComponent {
   @ViewChild(WaiterComponent) waiter!: WaiterComponent;
 
-  bigScreen = false;
-  onlyShowExercise = false;
-
-  panelOpenState = false;
-  public drawer: any;
-  expectedAnswer: any;
+  ls: LocalizerService;
 
   checkScreenSize(): void {
     this.bigScreen = window.innerWidth > 768;
@@ -29,24 +24,59 @@ export class TablegenComponent {
     });
   }
 
+  changeLanguage(lang: string) {
+    this.ls.setLanguage(lang);
+    this.selectedLanguage = lang;
+  }
+  public selectedLanguage: string = "english";
+
   isTablegenRoute = true;
   public currentPageNumber: number = 0;
+  public generatedUrl: string = "";
 
-  ls: LocalizerService;
+  bigScreen = false;
+  onlyShowExercise = false;
+
+  panelOpenState = false;
+  public drawer: any;
+
+  public exerciseChoices = ["Random empty", "Choose manually"];
+
   public msdWords: any;
   wordInputs: any;
+
   entry: any;
   allMsdWords: any;
   tableData: any[] = [];
-  i: any;
+
+  noun_headers = ['sg indef nom', 'sg indef gen', 'sg def nom', 'sg def gen', 'pl indef nom', 'pl indef gen', 'pl def nom', 'pl def gen']
+  verb_headers = ['imper', 'inf aktiv', 'pres ind aktiv', 'pret ind aktiv', 'sup aktiv']
+  adj_headers = ['pos indef sg u nom', 'pos indef sg n nom', 'pos indef pl nom', 'komp nom', 'super indef nom']
+
+  none_words: string[] = [];
+  add_manual_rows: boolean = false;
+
+  public generatedTable: any[] = [];
+
   expectedValue: any;
+  expectedAnswer: any;
   userValue: any;
   k: any;
+  i: any;
+  public word: string = '';
+  public words: string[] = [];
+  public inputValues: string[] = [];
+  userInput: string[] = [];
+  public correctAnswer: string[] = [];
+  public wrongAnswer: string[] = [];
 
 
-  changeLanguage(lang: string) {
-    this.ls.setLanguage(lang);
-  }
+  isAnswerChecked: boolean[] = [];
+  isCorrect: boolean[][] = [];
+  public isCellFilled: boolean[][] = [];
+
+
+  public isChecked: { [choice: string]: boolean } = {};
 
   constructor(private router: Router, private route: ActivatedRoute, 
     private snack: MatSnackBar, ls: LocalizerService, private backend: BackendService, private http: HttpClient, private clipboard: Clipboard) {
@@ -76,9 +106,11 @@ export class TablegenComponent {
             const data = response;
             this.generatedTable = data['generatedTable'];
             this.tableData = data['tableData']
+            this.selectedLanguage = data['selectedLanguage']
             this.onlyShowExercise = data['onlyShowExercise']
             if (this.generatedTable) {
               this.currentPageNumber = 3;
+              this.ls.setLanguage(this.selectedLanguage);
               this.isCorrect = new Array(this.generatedTable.length);
               this.isCellFilled = new Array(this.generatedTable.length);
               for (let i = 0; i < this.generatedTable.length; i++) {
@@ -95,9 +127,6 @@ export class TablegenComponent {
       }
     });
   }
-  
-
-  public generatedUrl: string = "";
 
   updateUrl(): void {
     const data = {
@@ -105,12 +134,15 @@ export class TablegenComponent {
       tableData: this.tableData,
       isCellFilled: this.isCellFilled,
       onlyShowExercise: true,
+      selectedLanguage: this.selectedLanguage
     };
     this.backend.storeData(data).subscribe(response => {
       const id = response.id;
       const data = response.data;
-      const encodedId = encodeURIComponent(id); // encode the ID using encodeURIComponent()
-      this.generatedUrl = `http://localhost:4200/tablegen?id=${encodedId}`;
+      const encodedId = encodeURIComponent(id); 
+      const encodedLang = encodeURIComponent(this.selectedLanguage)
+      //https://spraakbanken.gu.se/larkalabb/sfs/tablegen?id=${encodedId}&lang=${encodedLang}`;
+      this.generatedUrl = `http://localhost:4200/tablegen?id=${encodedId}&lang=${encodedLang}`;
       console.log(this.generatedUrl)
     });
   }
@@ -119,18 +151,11 @@ export class TablegenComponent {
     this.clipboard.copy(this.generatedUrl);
   }
 
-  public word: string = '';
-  public words: string[] = [];
-  public inputValues: string[] = [];
-
-  public exerciseChoices = ["Random empty", "Choose manually"];
-
-  public isChecked: { [choice: string]: boolean } = {};
-
 
   next() {
     this.currentPageNumber++;
   }
+
 
   back() {
     this.currentPageNumber--;
@@ -139,10 +164,12 @@ export class TablegenComponent {
     this.none_words = [];
   }
 
+
   back_to_tables() {
     this.currentPageNumber--;
     this.isAnswerChecked = [];
   }
+
 
   clearAll() {
     this.inputValues = [''];
@@ -157,6 +184,7 @@ export class TablegenComponent {
     this.add_new_row = false;
     this.show_save_button = false;
   }
+
 
   addInputField() {
     this.words.push('');
@@ -174,12 +202,6 @@ export class TablegenComponent {
     this.inputValues[index] = event.target.value;
   }
 
-  noun_headers = ['sg indef nom', 'sg indef gen', 'sg def nom', 'sg def gen', 'pl indef nom', 'pl indef gen', 'pl def nom', 'pl def gen']
-  verb_headers = ['imper', 'inf aktiv', 'pres ind aktiv', 'pret ind aktiv', 'sup aktiv']
-  adj_headers = ['pos indef sg u nom', 'pos indef sg n nom', 'pos indef pl nom', 'komp nom', 'super indef nom']
-
-  none_words: string[] = [];
-  add_manual_rows: boolean = false;
 
   create_big_table() {
     this.tableData = [];
@@ -217,7 +239,6 @@ export class TablegenComponent {
           }
           return acc;
         }, {});
-
 
         // Display the data in tables
         for (const wordClass in groupedData) {
@@ -272,8 +293,8 @@ export class TablegenComponent {
 
   add_new_row: boolean = false;
   show_save_button: boolean = false;
-
   newRow: any = {};
+
   addNewRow(table: any) {
     this.add_new_row = true;
     this.show_save_button = true;
@@ -289,13 +310,9 @@ export class TablegenComponent {
   }
 
 
-
-  public generatedTable: any[] = [];
-
   generateTable() {
     this.currentPageNumber++;
-
-    // create a deep copy of tableData
+    // create deep copy of tableData
     const newTableData = JSON.parse(JSON.stringify(this.tableData));
 
     // handle clicked cells
@@ -355,20 +372,18 @@ export class TablegenComponent {
     const clickedCellIndex = this.clickedCells[tableIndex]?.findIndex((cell: { tableIndex: number; rowIndex: number; columnIndex: any; }) => cell.rowIndex === rowIndex && cell.columnIndex === columnIndex);
 
     if (clickedCellIndex > -1) {
-      // Cell is already clicked, so remove it from the clickedCells array
+      // Cell is already clicked, remove it from the clickedCells array
       this.clickedCells[tableIndex].splice(clickedCellIndex, 1);
     } else {
-      // Cell is not already clicked, so add it to the clickedCells array
+      // Cell is not clicked, add it to the clickedCells array
       if (!this.clickedCells[tableIndex]) {
         this.clickedCells[tableIndex] = [];
       }
       this.clickedCells[tableIndex].push(clickedCell);
     }
-
     const clickedCellElement = (event.target as Element).closest('.table-cell');
     if (clickedCellElement) {
       clickedCellElement.classList.toggle('clicked');
-
     }
   }
 
@@ -380,14 +395,6 @@ export class TablegenComponent {
     return this.clickedCells[tableIndex].some(cell => cell.rowIndex === rowIndex && cell.columnIndex === columnIndex);
   }
 
-  userInput: string[] = [];
-  public correctAnswer: string[] = [];
-  public wrongAnswer: string[] = [];
-
-
-  isAnswerChecked: boolean[] = [];
-  isCorrect: boolean[][] = [];
-  public isCellFilled: boolean[][] = [];
 
   checkAnswers() {
     for (let i = 0; i < this.generatedTable.length; i++) {
@@ -409,9 +416,5 @@ export class TablegenComponent {
       }
     }
   }
-
-
-
-
 
 }

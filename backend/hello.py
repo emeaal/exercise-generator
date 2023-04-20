@@ -32,7 +32,7 @@ def process_grammar_data():
     text = ""
     if "text" in request.args:
         text = request.args.get("text")
-    print("H Received request with some text:", text)
+    print("Received request with some text:", text)
     return cors_response(xgen.process_grammar_data(text))
 
 @app.route("/process")
@@ -79,23 +79,22 @@ def process2():
     return cors_response(xgen.process2(json_obj, exclude_first, exclude_last, everyx))
 
 
-dataStore = {}
+dataStore = {} # Data saved in a temporary dictionary
 
 @app.route('/storeData', methods=['POST'])
 def store_data():
+    print("Store data called")
     data = request.json
     id = str(time.time())
     dataStore[id] = data
-    print("the stored data:", dataStore)
     return jsonify({"id": id, "data": data})
 
 
 @app.route('/showData')
 def show_data():
-    print("show data called")
+    print("Show data called")
     id = request.args.get('id')
     data = dataStore.get(id)
-    print("showing data: ", data)
     if data is None:
         return 'Data not found', 404
     else:
