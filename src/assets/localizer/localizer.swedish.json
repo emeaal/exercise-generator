@@ -57,7 +57,7 @@
     "second-table-header": "Skriv in dina ord",
     "choose-table-content": "Välj innehåll i övningen",
     "third-table-header": "Färdig tabell",
-    “preview-exercise”: “Förhandsvisa övning”
+    "preview-exercise": "Förhandsvisa övning"
 
   "header-edit-review": "Ändra i och granska tabell",
     "noun-table": "Tabell för substantiv",
@@ -126,6 +126,6 @@
     "cw-check-solution": "Kontrollera lösning",
     "cw-show-solution": "Visa lösning",
   
-    “score-feedback”: “Du fick: “,
+    "score-feedback": "Du fick: ",
 }
 
