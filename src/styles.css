@@ -247,6 +247,8 @@ b {
 .table-container {
     padding-top: 50px;
     width: 100%;
+    max-width: 900px;
+    margin: auto;
     display: flex;
     justify-content: center;
     float: none;
