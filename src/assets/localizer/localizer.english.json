@@ -46,7 +46,7 @@
     "exclude-last": "Exclude last sentence from exercise generation",
     "show-target-items": "Show target items",
     "include-only": "Include only every",
-    "..from-xgen": "from exercise generation",
+    "..from-xgen": "word from exercise generation",
     "every-second": "2nd",
     "every-third": "3rd",
     "every-fourth": "4th",
