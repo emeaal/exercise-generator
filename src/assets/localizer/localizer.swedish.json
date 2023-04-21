@@ -1,5 +1,5 @@
 {
-    "welcome-header": "Välkommen till Swedish From Scratch",
+    "welcome-header": "Välkommen till SwedishFromScratch",
     "welcome-text": "Det finns tre sorters övningar att skapa, se nedan för att se beskrivningar och exempel.",
 
     "navigation-home": "Hem",
@@ -22,7 +22,7 @@
     "menu-load-lesson": "Välj lektion",
     "menu-write-text": "Skriv din egna text",
     "menu-ln": "Lektionsnummer",
-    "menu-lesson-title": "TItel",
+    "menu-lesson-title": "Titel",
     "menu-enter-text": "Skriv din text här",
 
     "button-review": "Granska",
@@ -40,12 +40,13 @@
     "exclude-from-exercise": "Ha inte med i övning",
     "insert-linebreak": "Infoga radbrytning efter",
 
+
     "generate-x-pos": "Skapa övningar för följande ordklasser",
     "exclude-first": "Exkludera första meningen från övningen", 
     "exclude-last": "Exkludera sista meningen från övningen",
     "show-target-items": "Visa svar som hjälp",
     "include-only": "Ha endast med",
-    "..from-xgen": "från att bli övning",
+    "..from-xgen": "word från att vara lucka",
     "every-second": "vartannat",
     "every-third": "var 3e",
     "every-fourth": "var 4e",
@@ -56,8 +57,9 @@
     "second-table-header": "Skriv in dina ord",
     "choose-table-content": "Välj innehåll i övningen",
     "third-table-header": "Färdig tabell",
-    "header-edit-review": "Ändra i och granska tabell",
+    “preview-exercise”: “Förhandsvisa övning”
 
+  "header-edit-review": "Ändra i och granska tabell",
     "noun-table": "Tabell för substantiv",
     "verb-table": "Tabell för verb",
     "adj-table": "Tabell för adjektiv",
@@ -74,6 +76,7 @@
     "table-header-msd": "MSD",
     "table-header-choose": "Välj för övning",
     "table-header-alt-ans": "Alternativa svar",
+
 
     "general-pos-NOUN": "substantiv",
     "general-pos-VERB": "verb",
@@ -104,6 +107,7 @@
     "language-selection-ukrainian": "Ukrainska",
 
     "lesson": "Lektion",
+
     "exercise-link": "Här är din länk till övningen: ",
     "copy-url": "Kopiera länk",
     "create-url": "Skapa länk",
@@ -120,5 +124,8 @@
     "cw-down": "NER",
     "cw-hints": "Ledtrådar",
     "cw-check-solution": "Kontrollera lösning",
-    "cw-show-solution": "Visa lösning"
+    "cw-show-solution": "Visa lösning",
+  
+    “score-feedback”: “Du fick: “,
 }
+
