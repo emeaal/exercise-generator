@@ -77,17 +77,19 @@
                 {{ls.localize('menu-write-text')}}
                 <br><br>
                 <mat-form-field style="width: 30%;">
-                    <input matInput type="number" [(ngModel)]="lessonNumber" placeholder="{{ls.localize('menu-ln')}}" #ln
-                        autocomplete="off">
+                    <input matInput type="number" [(ngModel)]="lessonNumber" placeholder="{{ls.localize('menu-ln')}}"
+                        #ln autocomplete="off">
                 </mat-form-field>
                 &nbsp;&nbsp;&nbsp;
                 <mat-form-field style="width: 50%;">
-                    <input matInput type="text" [(ngModel)]="lessonTitle" placeholder="{{ls.localize('menu-lesson-title')}}" #title autocomplete="off">
+                    <input matInput type="text" [(ngModel)]="lessonTitle"
+                        placeholder="{{ls.localize('menu-lesson-title')}}" #title autocomplete="off">
                 </mat-form-field>
                 <br />
                 <mat-form-field style="width: 90%;">
-                    <textarea matInput [(ngModel)]="textareaValue" #newtext placeholder="{{ls.localize('menu-enter-text')}}"
-                        cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5"
+                    <textarea matInput [(ngModel)]="textareaValue" #newtext
+                        placeholder="{{ls.localize('menu-enter-text')}}" cdkTextareaAutosize
+                        #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5"
                         cdkAutosizeMaxRows="50">{{ textareaValue }}</textarea>
                 </mat-form-field>
                 <br /><br />
@@ -100,10 +102,12 @@
         </div>
         <div *ngIf="currentPageNumber==1">
             <h3>{{ls.localize('header-check-info')}}</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, et
-                efficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam.
-                Cras dignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis volutpat
-                turpis elementum.</p>
+            <p>Below is a generated table for your exercise. In this step you can edit the contents of the table and add
+                alternative answers. If you want to change the spelling of a word you can either do it here or go back
+                to the previous page. If you fill in “alternative answers”, these will also be considered correct (as
+                will the original word). Once you click “Next” the data that
+                you've put here will be saved and processed. You can come back to this page at any time to edit. Just
+                don't forget to click “Next” if you change something.</p>
             <button mat-button mat-raised-button color="primary" (click)="back()">
                 {{ls.localize('button-back')}}
             </button>
@@ -117,7 +121,8 @@
             <div class="help-right">
                 <button *ngIf="!showValidPos" mat-button mat-raised-button (click)="togglePos()">
                     {{ls.localize('button-show-pos')}}</button>
-                <button *ngIf="showValidPos" mat-button mat-raised-button (click)="togglePos()">{{ls.localize('button-hide-pos')}}</button>
+                <button *ngIf="showValidPos" mat-button mat-raised-button
+                    (click)="togglePos()">{{ls.localize('button-hide-pos')}}</button>
                 <br /><br />
                 <div *ngIf="showValidPos">
                     <div *ngFor="let posLabel of validLabels">
@@ -132,13 +137,13 @@
                     <th>{{ls.localize('table-header-lemma')}}</th>
                     <th>{{ls.localize('table-header-pos')}}</th>
                     <th>{{ls.localize('table-header-alt-ans')}} <mat-icon inline="true"
-                            matTooltip="Enter an alternative answer or a list of comma-separated values. Leave blank to allow only the original answer.">help</mat-icon>
+                            matTooltip="{{ls.localize('tooltip-alt-answers')}}">help</mat-icon>
                     </th>
                     <!-- <th>Multiple choice distractors (3)<mat-icon inline="true"
                             matTooltip="Enter a comma-separated list of 3 distractors for multiple-choice questions.">help</mat-icon>
                     </th>-->
                     <th>{{ls.localize('exclude-from-exercise')}} <mat-icon inline="true"
-                            matTooltip="Exclude this word from the automatic exercise generation.">help</mat-icon></th>
+                            matTooltip="{{ls.localize('tooltip-exclude-word')}}">help</mat-icon></th>
                     <th>Delete</th>
                     <th></th>
                 </tr>
@@ -179,10 +184,20 @@
         <div *ngIf="currentPageNumber==2">
 
             <h3>{{ls.localize('exercise-options')}}s</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, et
-                efficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam.
-                Cras dignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis volutpat
-                turpis elementum.</p>
+            <p>To create your exercise, you have a few choices on this page. You can select the parts of speech that
+                will be turned into gaps. For instance, if you choose "verb," all verbs in the exercise (excluding those
+                excluded in the previous step) will be considered for gap generation. Additionally, you can choose to
+                exclude gaps from the first and last sentences and display the target items (answers) in a list.
+                Finally, you can choose the gap distance. A smaller distance of 2 will create more gaps overall, while a
+                larger distance of 5 will result in fewer gaps. </p>
+            <br />
+            <p> After making your selections, click "Preview exercise" to review your choices. If you're not satisfied,
+                you can return to the previous page and make changes, but remember to click "Preview exercise" again
+                after making any adjustments.</p>
+            <br />
+            <p> When you're satisfied with the exercise you've created you can click “Create link” on the next page and
+                the exercise with your chosen settings can be sent to others.
+            </p>
 
             <br />
             {{ls.localize('generate-x-pos')}}
@@ -194,11 +209,15 @@
             </div>
 
             <br />
-            <mat-checkbox [(ngModel)]="excludeFirstSentence">{{ls.localize('exclude-first')}}</mat-checkbox>
+            <mat-checkbox [(ngModel)]="excludeFirstSentence">{{ls.localize('exclude-first')}}
+                <mat-icon inline="true" matTooltip="{{ls.localize('tooltip-first-sent')}}">help</mat-icon>
+            </mat-checkbox>
             <br />
-            <mat-checkbox [(ngModel)]="excludeLastSentence">{{ls.localize('exclude-first')}}</mat-checkbox>
+            <mat-checkbox [(ngModel)]="excludeLastSentence">{{ls.localize('exclude-last')}}
+                <mat-icon inline="true" matTooltip="{{ls.localize('tooltip-last-sent')}}">help</mat-icon>
+            </mat-checkbox>
             <br />
-            <mat-checkbox [(ngModel)]="showItems">{{ls.localize('show-target-items')}}</mat-checkbox>
+            <mat-checkbox [(ngModel)]="showItems">{{ls.localize('show-target-items')}} <mat-icon inline="true" matTooltip="{{ls.localize('tooltip-target-items')}}">help</mat-icon></mat-checkbox>
             <br />
 
 
@@ -216,9 +235,11 @@
             <br />
 
 
-            <button mat-button mat-raised-button color="primary" (click)="back()">{{ls.localize('button-back')}}</button>
+            <button mat-button mat-raised-button color="primary"
+                (click)="back()">{{ls.localize('button-back')}}</button>
             &nbsp;&nbsp;&nbsp;
-            <button mat-button mat-raised-button color="primary" (click)="preview()">{{ls.localize('preview-exercise')}}</button>
+            <button mat-button mat-raised-button color="primary"
+                (click)="preview()">{{ls.localize('preview-exercise')}}</button>
             &nbsp;&nbsp;&nbsp;
             <!-- <button mat-button mat-raised-button color="warn" (click)="discard()">
             Discard
@@ -278,7 +299,8 @@
 
 
             <br>
-            <button mat-button mat-raised-button color="primary" (click)="back()">{{ls.localize('button-back')}}</button>
+            <button mat-button mat-raised-button color="primary"
+                (click)="back()">{{ls.localize('button-back')}}</button>
             &nbsp;&nbsp;&nbsp;
             <button mat-button mat-raised-button (click)="checkAnswers(); AreAnswersChecked = true;"
                 color="primary">{{ls.localize('exercise-check-answers')}}</button>

@@ -39,6 +39,8 @@
     "exercise-options": "Övningsalternativ",
     "exclude-from-exercise": "Ha inte med i övning",
     "insert-linebreak": "Infoga radbrytning efter",
+    "tooltip-alt-answers": "Skriv in alternativa svar separerade med kommatecken. Lämna blank för att bara tillåta det originalsvaret",
+    "tooltip-exclude-word": "Om du fyller i denna kommer detta ord inte bli till lucka i övningen",
 
 
     "generate-x-pos": "Skapa övningar för följande ordklasser",
@@ -47,6 +49,9 @@
     "show-target-items": "Visa svar som hjälp",
     "include-only": "Ha endast med",
     "..from-xgen": "ord från att vara lucka",
+    "tooltip-first-sent": "Detta kommer inte skapa några luckor i den första meningen",
+    "tooltip-last-sent": "Detta kommer inte skapa några luckor i den sista meningen",
+    "tooltip-target-items": "Om denna är ifylld kommer alla rätta svar finnas att visa i en lista",
     "every-second": "vartannat",
     "every-third": "var 3e",
     "every-fourth": "var 4e",

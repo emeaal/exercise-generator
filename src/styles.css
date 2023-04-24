@@ -142,7 +142,6 @@ b {
 
 .card {
     max-width: 350px;
-    max-height: 450px;
     flex-direction: column;
     padding: 10px;
     margin: 10px;

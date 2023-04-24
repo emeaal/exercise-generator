@@ -39,6 +39,8 @@
     "exercise-options": "Exercise options",
     "exclude-from-exercise": "Exclude from exercise",
     "insert-linebreak": "Insert linebreak after this",
+    "tooltip-alt-answers": "Enter an alternative answer or a list of comma-separated values. Leave blank to allow only the original answer", 
+    "tooltip-exclude-word": "Exclude this word from the automatic exercise generation",
 
 
     "generate-x-pos": "Generate exercises for the following POS",
@@ -47,6 +49,9 @@
     "show-target-items": "Show target items",
     "include-only": "Include only every",
     "..from-xgen": "word from exercise generation",
+    "tooltip-first-sent": "This will not create any gaps for the first sentence",
+    "tooltip-last-sent": "This will not create any gaps for the last sentence",
+    "tooltip-target-items": "If you check this box all correct answers can be shown as clues in a list",
     "every-second": "2nd",
     "every-third": "3rd",
     "every-fourth": "4th",
