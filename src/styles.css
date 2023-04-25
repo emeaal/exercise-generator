@@ -48,6 +48,11 @@ b {
     justify-content: space-between;
 }
 
+.mat-toolbar .mat-mdc-button {
+  margin: 10px; 
+  min-width: max-content;
+}
+
 .mdc-button {
     /*make the arrow look ok*/
     width: 140px;
@@ -147,10 +152,6 @@ b {
     margin: 10px;
   }
   
-  .header-image {
-    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-    background-size: cover;
-  }
 
 .card-container {
     display: flex; 
@@ -260,7 +261,7 @@ b {
 
 .table-field {
     width: auto;
-    max-width: 100px; /* optional: set a maximum width to prevent cells from becoming too wide */
+    max-width: 100px; /* prevent cells from becoming too wide */
 }
 
 .table-size {
@@ -324,8 +325,6 @@ table {
 
 /* Grammar exercises*/
 
-
-  
 
 
 .small-screen .mat-menu-trigger {
