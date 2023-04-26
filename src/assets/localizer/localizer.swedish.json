@@ -135,15 +135,15 @@
 
 
     "card-xgen": "Den här övningen använder text för att skapa en textövning med luckor baserat på ordklass. I den här övningen kan man välja en färdig text eller skriva in en egen som sedan annoteras av systemet. Sen kan man göra ändringar i den annoterade texten och välja ut vilka ordklasser som ska bli till luckor. Du väljer avståndet mellan två luckor och det finns också flera andra val att göra.",
-    "card-tablegen": "This exercise is using text to create a fill-the-gap exercise based on part-of-speech. In this exercise a text chosen from the prepared lesson texts or a text is filled into the system. The text will be annotated by the system, you can edit the output and then choose what part-of-speech (nouns, verbs etc) should be made into gaps. You decide on the distance between two gaps and other options are available as well.",
+    "card-tablegen": "Den här övningen skapar böjningstabeller för substantiv, verb och adjektiv. Här skriver man in de ord man vill ha med i sina tabeller och sedan får man de ordnade i böjningstabeller. Man kan då ändra i innehållet och sen välja vilka former som kommer att vara ifyllbara i övningen. Det kan antingen göras manuellt eller slumpmässigt.",
     "card-gram-x": "Den här övningen använder text för att skapa en textövning med luckor baserat på grammatik och kongruens. Man väljer själv vilka grundformer som blir till luckor i övningen. I denna övning väljer man antingen en färdig text eller skriver in sin egen. Därefter får man en tabell med bland annat varje ord och dess grundform och man väljer därefter vilka grundformer man vill ha i övningen. I denna övning visas ordets grundform som en ledtråd och svaret ska då skrivas in i rätt form baserat på sammanhanget.",
 
-    "tablegen-edit": "Lorem ipsum dolor",
-    "tablegen-choose": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "tablegen-edit": "Nedan ser du din genererade tabell. Här kan du ändra i innehållet i tabellen",
+    "tablegen-choose": "På denna sida väljer du vilka celler som ska vara tomma i övningen. Tryck på “Nästa“ när du är klar",
 
-    "xgen-table-explain": "Lorem ipsum dolor",
-    "xgen-explain-options": "Lorem ipsum dolor",
+    "xgen-table-explain": "Nedan finner du information om texten du skrev in i föregående steg. I detta steg kan du ändra innehållet i texten och lägga till alternativa svar. När du är klar kan du klicka knappen “Nästa” och det du fyllt i kommer att sparas. Du kan när som helst gå tillbaka till den här sidan om du vill ändra något. Glöm inte att klicka på “Nästa” om du ändrar något.",
+    "xgen-explain-options": "På den här sidan gör du val för din övning. Du väljer bl.a. vilka ordklasser som ska bli till luckor i övningen och hur stort avstånd det ska vara mellan luckorna.",
 
-    "gram-explain": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, etefficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam. Crasdignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis volutpat turpiselementum."
+    "gram-explain": "Nedan har det genererats en tabell som visar ordet, dess grundform, dess ordklass och dess morfosyntaktiska beskrivning. I rutorna till höger väljer du vilka grundformer som ska bli till luckor i övningen. Om det finns fler av samma grundform kommer alla att bli valda. Det som står under “lemma” är ordet grundform och kommer att visas som en ledtråd i den slutgiltiga övningen. Glöm inte att trycka på “Nästa” när du är klar här."
 }
 

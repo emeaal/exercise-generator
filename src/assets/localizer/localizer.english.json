@@ -137,11 +137,12 @@
     "card-tablegen": "In this exercise you can create inflection tables for nouns, verbs and adjectives. You type in the words that you want to create tables for and the words will be ordered into tables based on part-of-speech. Then you can edit the table content and you can choose what forms will be emptied (made for practice). You can either choose them manually or let it be done randomly.",
     "card-gram-x": "This exercise is using text to create a fill-the-gap exercise based on grammar and you choose what lemmas will be made into gaps. In this exercise a text is either chosen from the prepared lesson texts or a text is filled into the system manually. Next you will get a table with each word and its lemma and you will then choose what lemmas will be made into gaps. In this exercise the lemma is shown as a clue and the answer should be written in the correct form based on its surroundings.",
 
-    "tablegen-edit": " This exercise is using text to create a fill-the-gap exercise based on grammar and grammar agreement and you choose what lemmas will be made into gaps. In this exercise a text is either chosen from the prepared lesson texts or a text is filled into the system by the user. Next you choose what lemmas will be made into gaps. In this exercise the lemma is shown as a clue and the answer should be written in the correct form based on its surroundings.",
-    "tablegen-choose": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "tablegen-edit": "On this page you see the generated tables. Here you can edit the content of the tables and the way the tables look once you're done here will be considered as the correct answer. If you want to delete a row from a table you can go back to the previous page and delete the word from there.",
+    "tablegen-choose": "On this page you choose what cells should be made empty for the exercise. You click “Next” when you're done to preview the exercise.",
 
-    "xgen-table-explain": "Lorem ipsum dolor",
-    "xgen-explain-options": "Lorem ipsum dolor",
+    "xgen-table-explain": "Below is a generated table for your exercise. In this step you can edit the contents of the table and add alternative answers. Once you click “Next” the data that you've put here will be saved and processed. You can come back to this page at any time to edit. Just don't forget to click “Next” if you change something.",
+    "xgen-explain-options": "To create your exercise, you have a few choices on this page. You select the parts of speech that will be turned into gaps and what the distance should be between every gap.",
 
-    "gram-explain": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, etefficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam. Crasdignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis volutpat turpiselementum."
+    "gram-explain": "Now you have a editable table consisting of word, its lemma, its part-of-speech and its morphosyntactic description. In the checkboxes to the right you choose what lemmas should be made into gaps. If there’s more of the same lemma in the text, all will be chosen. The items in the lemma column will be shown as a clue in the exercise. Don't forget to scroll down and click “Next” once you're done here."
+
 }
