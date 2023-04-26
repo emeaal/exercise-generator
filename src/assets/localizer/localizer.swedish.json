@@ -131,6 +131,19 @@
     "cw-check-solution": "Kontrollera lösning",
     "cw-show-solution": "Visa lösning",
   
-    "score-feedback": "Du fick: "
+    "score-feedback": "Du fick: ",
+
+
+    "card-xgen": "Den här övningen använder text för att skapa en textövning med luckor baserat på ordklass. I den här övningen kan man välja en färdig text eller skriva in en egen som sedan annoteras av systemet. Sen kan man göra ändringar i den annoterade texten och välja ut vilka ordklasser som ska bli till luckor. Du väljer avståndet mellan två luckor och det finns också flera andra val att göra.",
+    "card-tablegen": "This exercise is using text to create a fill-the-gap exercise based on part-of-speech. In this exercise a text chosen from the prepared lesson texts or a text is filled into the system. The text will be annotated by the system, you can edit the output and then choose what part-of-speech (nouns, verbs etc) should be made into gaps. You decide on the distance between two gaps and other options are available as well.",
+    "card-gram-x": "Den här övningen använder text för att skapa en textövning med luckor baserat på grammatik och kongruens. Man väljer själv vilka grundformer som blir till luckor i övningen. I denna övning väljer man antingen en färdig text eller skriver in sin egen. Därefter får man en tabell med bland annat varje ord och dess grundform och man väljer därefter vilka grundformer man vill ha i övningen. I denna övning visas ordets grundform som en ledtråd och svaret ska då skrivas in i rätt form baserat på sammanhanget.",
+
+    "tablegen-edit": "Lorem ipsum dolor",
+    "tablegen-choose": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+
+    "xgen-table-explain": "Lorem ipsum dolor",
+    "xgen-explain-options": "Lorem ipsum dolor",
+
+    "gram-explain": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, etefficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam. Crasdignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis volutpat turpiselementum."
 }
 

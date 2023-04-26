@@ -236,15 +236,16 @@ export class GramXComponent {
         const input = this.userInput[i];
         const inputIndex = this.userInput.indexOf(input);
 
-        const wordsBefore = this.posData.slice(Math.max(0, inputIndex - 2), inputIndex);
-        const wordsAfter = this.posData.slice(inputIndex + 1, inputIndex + 3);
+        //if we want context from gap word 
+        //const wordsBefore = this.posData.slice(Math.max(0, inputIndex - 2), inputIndex);
+        //const wordsAfter = this.posData.slice(inputIndex + 1, inputIndex + 3);
 
-        console.log(wordsBefore, input, wordsAfter);
+        //console.log(wordsBefore, input, wordsAfter);
         if (input == word.text) {
           this.isCorrect[i] = true
           this.correctCount++;
           this.totalCount++;
-        } else if (input !== undefined) {
+        } else {
           this.isCorrect[i] = false
           this.totalCount++;
         }

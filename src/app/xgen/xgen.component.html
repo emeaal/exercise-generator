@@ -13,7 +13,7 @@
     </div>
 
     <div style="float:right">
-        <button mat-button [matMenuTriggerFor]="menu">{{ls.localize('language-selection-menu')}}</button>
+        <button mat-button [matMenuTriggerFor]="menu">{{ls.localize('language-selection-menu')}} <i class="material-icons">language</i></button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item
                 (click)="changeLanguage('english')">{{ls.localize('language-selection-english')}}</button>
@@ -23,7 +23,6 @@
                 (click)="changeLanguage('russian')">{{ls.localize('language-selection-russian')}}</button>
             <!--<button mat-menu-item disabled="true">{{ls.localize('language-selection-ukrainian')}}</button>-->
         </mat-menu>
-        <i class="material-icons">language</i>
     </div>
 
 </mat-toolbar>
@@ -102,12 +101,7 @@
         </div>
         <div *ngIf="currentPageNumber==1">
             <h3>{{ls.localize('header-check-info')}}</h3>
-            <p>Below is a generated table for your exercise. In this step you can edit the contents of the table and add
-                alternative answers. If you want to change the spelling of a word you can either do it here or go back
-                to the previous page. If you fill in “alternative answers”, these will also be considered correct (as
-                will the original word). Once you click “Next” the data that
-                you've put here will be saved and processed. You can come back to this page at any time to edit. Just
-                don't forget to click “Next” if you change something.</p>
+            <p>{{ls.localize('xgen-table-explain')}}</p>
             <button mat-button mat-raised-button color="primary" (click)="back()">
                 {{ls.localize('button-back')}}
             </button>
@@ -183,21 +177,8 @@
         </div>
         <div *ngIf="currentPageNumber==2">
 
-            <h3>{{ls.localize('exercise-options')}}s</h3>
-            <p>To create your exercise, you have a few choices on this page. You can select the parts of speech that
-                will be turned into gaps. For instance, if you choose "verb," all verbs in the exercise (excluding those
-                excluded in the previous step) will be considered for gap generation. Additionally, you can choose to
-                exclude gaps from the first and last sentences and display the target items (answers) in a list.
-                Finally, you can choose the gap distance. A smaller distance of 2 will create more gaps overall, while a
-                larger distance of 5 will result in fewer gaps. </p>
-            <br />
-            <p> After making your selections, click "Preview exercise" to review your choices. If you're not satisfied,
-                you can return to the previous page and make changes, but remember to click "Preview exercise" again
-                after making any adjustments.</p>
-            <br />
-            <p> When you're satisfied with the exercise you've created you can click “Create link” on the next page and
-                the exercise with your chosen settings can be sent to others.
-            </p>
+            <h3>{{ls.localize('exercise-options')}}</h3>
+            <p>{{ls.localize('xgen-explain-options')}}</p>
 
             <br />
             {{ls.localize('generate-x-pos')}}

@@ -343,27 +343,22 @@ export class XgenComponent {
 
   checkAnswers() {
     this.correctCount = 0;
-    this.totalCount = 0;
+    this.totalCount = this.renderedData.length;
     for (let i = 0; i < this.posData.length; i++) {
       const word = this.posData[i];
       const input = this.userInput[i];
       if (input && (input === word.accept || (word.altAnswer && word.altAnswer.includes(input)))) {
-        console.log(`This was correct: ${input}`);
         this.correctAnswer.push(input);
         this.isCorrect[i] = true;
         this.isAnswerChecked[i] = true;
-        console.log(this.isAnswerChecked[i])
         this.correctCount++;
-        this.totalCount++;
       } else if (input !== undefined) {
-        console.log(`This was wrong: ${input}`);
         this.wrongAnswer.push(input);
         this.isAnswerChecked[i] = true;
-        console.log(this.isAnswerChecked[i])
         this.isCorrect[i] = false;
-        this.totalCount++;
       }
     }
+    console.log(this.correctCount, this.totalCount)
   }
 
 

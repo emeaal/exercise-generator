@@ -131,5 +131,17 @@
     "cw-check-solution": "Check solution",
     "cw-show-solution": "Show solution",
 
-    "score-feedback": "You got: "
+    "score-feedback": "You got: ",
+
+    "card-xgen": "This exercise is using text to create a fill-the-gap exercise based on part-of-speech. In this exercise a text chosen from the prepared lesson texts or a text is filled into the system. The text will be annotated by the system, you can edit the output and then choose what part-of-speech (nouns, verbs etc) should be made into gaps. You decide on the distance between two gaps and other options are available as well.",
+    "card-tablegen": "In this exercise you can create inflection tables for nouns, verbs and adjectives. You type in the words that you want to create tables for and the words will be ordered into tables based on part-of-speech. Then you can edit the table content and you can choose what forms will be emptied (made for practice). You can either choose them manually or let it be done randomly.",
+    "card-gram-x": "This exercise is using text to create a fill-the-gap exercise based on grammar and you choose what lemmas will be made into gaps. In this exercise a text is either chosen from the prepared lesson texts or a text is filled into the system manually. Next you will get a table with each word and its lemma and you will then choose what lemmas will be made into gaps. In this exercise the lemma is shown as a clue and the answer should be written in the correct form based on its surroundings.",
+
+    "tablegen-edit": " This exercise is using text to create a fill-the-gap exercise based on grammar and grammar agreement and you choose what lemmas will be made into gaps. In this exercise a text is either chosen from the prepared lesson texts or a text is filled into the system by the user. Next you choose what lemmas will be made into gaps. In this exercise the lemma is shown as a clue and the answer should be written in the correct form based on its surroundings.",
+    "tablegen-choose": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+
+    "xgen-table-explain": "Lorem ipsum dolor",
+    "xgen-explain-options": "Lorem ipsum dolor",
+
+    "gram-explain": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, etefficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam. Crasdignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis volutpat turpiselementum."
 }

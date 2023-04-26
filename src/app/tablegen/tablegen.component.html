@@ -12,14 +12,13 @@
 
 
   <div style="float:right">
-    <button mat-button [matMenuTriggerFor]="menu">{{ls.localize('language-selection-menu')}}</button>
+    <button mat-button [matMenuTriggerFor]="menu">{{ls.localize('language-selection-menu')}} <i class="material-icons">language</i></button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item (click)="changeLanguage('english')">{{ls.localize('language-selection-english')}}</button>
       <button mat-menu-item (click)="changeLanguage('swedish')">{{ls.localize('language-selection-swedish')}}</button>
       <button mat-menu-item (click)="changeLanguage('russian')">{{ls.localize('language-selection-russian')}}</button>
       <!--<button mat-menu-item disabled="true">{{ls.localize('language-selection-ukrainian')}}</button>-->
     </mat-menu>
-    <i class="material-icons">language</i>
   </div>
 
 </mat-toolbar>
@@ -77,7 +76,7 @@
   <div *ngIf="currentPageNumber==1 && tableData">
     <h3>{{ls.localize('header-edit-review')}}</h3>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, et efficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam. Cras dignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis volutpat turpis elementum.</p>
+    <p>{{ls.localize('tablegen-edit')}}</p>
 
     <div *ngFor="let table of tableData">
       <h3>{{ table.wordClass }} table</h3>
@@ -134,7 +133,7 @@
 
     <h3>{{ls.localize('choose-table-content')}}</h3>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend ex sit amet dolor rutrum, et efficitur tortor luctus. Nulla sit amet mauris dolor. Integer faucibus sit amet ex sit amet aliquam. Cras dignissim sapien et auctor molestie. Pellentesque vehicula ex sed orci pulvinar, sagittis volutpat turpis elementum.</p>
+    <p>{{ls.localize('tablegen-choose')}}</p>
 
     <div *ngFor="let choice of exerciseChoices">
       <mat-checkbox [(ngModel)]="isChecked[choice]" [value]="choice">{{choice}}</mat-checkbox>
@@ -212,13 +211,16 @@
     
     <br>
 
+    <div style="display: flex; justify-content: space-between;">
     <div *ngIf="!onlyShowExercise">
-    <button mat-button mat-raised-button color="primary"
+    <button mat-button mat-raised-button color="primary" 
       (click)="back_to_tables()">{{ls.localize('button-back')}}</button>
     </div>
     &nbsp;&nbsp;&nbsp;
-    <button mat-button mat-raised-button (click)="checkAnswers()"
+    <button mat-button mat-raised-button (click)="checkAnswers()" 
       color="primary">{{ls.localize('exercise-check-answers')}}</button>
+
+      </div>
 
       <br /><br />
       <div *ngIf="!onlyShowExercise">
@@ -233,6 +235,5 @@
             <span class="url-span">{{generatedUrl}}</span>
           </div>
         </div>  
-
 
   </div>

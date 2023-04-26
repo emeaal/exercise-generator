@@ -16,7 +16,7 @@
 
 
     <div style="float:right" *ngIf="bigScreen">
-        <button mat-button [matMenuTriggerFor]="menu">{{ls.localize('language-selection-menu')}}</button>
+        <button mat-button [matMenuTriggerFor]="menu">{{ls.localize('language-selection-menu')}} <i class="material-icons">language</i></button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item
                 (click)="changeLanguage('english')">{{ls.localize('language-selection-english')}}</button>
@@ -26,7 +26,6 @@
                 (click)="changeLanguage('russian')">{{ls.localize('language-selection-russian')}}</button>
             <!--<button mat-menu-item disabled="true">{{ls.localize('language-selection-ukrainian')}}</button>-->
         </mat-menu>
-        <i class="material-icons">language</i>
     </div>
     <div *ngIf="!bigScreen">
         <button mat-icon-button (click)="drawer.toggle()">
@@ -93,11 +92,7 @@
             <mat-card-content>
                 <br>
                 <p>
-                    This exercise is using text to create a fill-the-gap exercise based on part-of-speech. In this
-                    exercise a text chosen from the prepared lesson texts or a text is filled into the system. The text
-                    will be annotated by the system, you can edit the output and then choose what part-of-speech (nouns,
-                    verbs etc) should be made into gaps. You decide on the distance between two gaps and other options
-                    are available as well.
+                    {{ls.localize('card-xgen')}}
                 </p>
             </mat-card-content>
             <mat-card-actions>
@@ -113,11 +108,7 @@
             <mat-card-content>
                 <br>
                 <p>
-                    In this exercise you can create inflection tables for nouns, verbs and adjectives, all at the same
-                    time if wanted. You type in the words that you want to create tables for and the words will be
-                    ordered into tables based on part-of-speech. Then you can edit the table content and you can choose
-                    what forms will be emptied (made for practice). You can either choose them manually or let it be
-                    done randomly.
+                   {{ls.localize('card-tablegen')}}
                 </p>
             </mat-card-content>
             <mat-card-actions>
@@ -133,11 +124,7 @@
             <mat-card-content>
                 <br>
                 <p>
-                    This exercise is using text to create a fill-the-gap exercise based on grammar and grammar agreement
-                    and you choose what lemmas will be made into gaps. In this exercise a text is either chosen from the
-                    prepared lesson texts or a text is filled into the system by the user. Next you choose what lemmas will be made into gaps. In this
-                    exercise the lemma is shown as a clue and the answer should be written in the correct form based on
-                    its surroundings.
+                   {{ls.localize('card-gram-x')}}
                 </p>
             </mat-card-content>
             <mat-card-actions>
