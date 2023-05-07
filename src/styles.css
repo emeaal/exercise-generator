@@ -17,12 +17,12 @@ body {
 }
 
 .margin-container {
-    width: 50%;
-    padding-left: 10%;
-    padding-top: 30px;
-    overflow: visible;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
+  width: 50%;
+  padding-left: 300px;
+  padding-top: 30px;
+  overflow: visible;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 
@@ -50,7 +50,7 @@ b {
 
 .mat-toolbar .mat-mdc-button {
   margin: 10px; 
-  min-width: max-content;
+  width: auto;
 }
 
 .mdc-button {
@@ -177,12 +177,6 @@ b {
     padding-left: 60x;
 }
 
-.margin-container {
-    width: 50%;
-    padding-left: 300px;
-    padding-top: 30px;
-}
-
 .gap {
     border: 1px solid gray;
     /*box-sizing: border-box;*/
@@ -271,6 +265,7 @@ b {
 table {
     border-collapse: collapse;
     width: 100%;
+    table-layout: fixed;
   }
   
   th,
@@ -278,7 +273,8 @@ table {
     padding: 8px;
     text-align: left;
     border-bottom: 1px solid #ddd;
-    width: 100px;
+    width: 120px;
+    overflow: hidden;
   }
   
   th {
