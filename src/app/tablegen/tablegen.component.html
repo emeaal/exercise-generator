@@ -128,7 +128,7 @@
       {{ls.localize('button-next')}}
     </button>
 
-    
+
   </div>
   <div *ngIf="currentPageNumber==2">
 
@@ -136,13 +136,18 @@
 
     <p>{{ls.localize('tablegen-choose')}}</p>
 
-    <div *ngFor="let choice of exerciseChoices">
-      <mat-checkbox [(ngModel)]="isChecked[choice]" [value]="choice">{{choice}}</mat-checkbox>
-      <mat-icon inline="true" *ngIf="isChecked[choice] && choice === 'Choose manually'"
-        matTooltip="{{ls.localize('tooltip-manuel-choice')}}">help</mat-icon> <br />
-    </div>
+    <div style="display: grid; align-items: center;">
+      <mat-checkbox [(ngModel)]="isChecked['randomEmpty']" [value]="'randomEmpty'">
+        {{ ls.localize('checkbox-random-empty') }}
+      </mat-checkbox>
+      <mat-checkbox [(ngModel)]="isChecked['manualChoice']" [value]="'manualChoice'" 
+        matTooltip="{{ ls.localize('tooltip-manuel-choice') }}">
+        {{ ls.localize('checkbox-manual-choice') }} 
+        <mat-icon inline="true">help</mat-icon>
+      </mat-checkbox>
+    </div>    
 
-    <div *ngIf="isChecked['Choose manually']">
+    <div *ngIf="isChecked['manualChoice']">
       <div *ngFor="let table of tableData; let tableIndex = index">
         <h3>{{ table.wordClass }} table</h3>
         <table>
